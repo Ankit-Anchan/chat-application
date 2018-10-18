@@ -1,12 +1,14 @@
-var createError = require('http-errors');
+'use strict';
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/users.route');
 const connection = require('./config/db.config');
+const ApplicationError = require('./common/error');
+const ErrorHandler = require('./common/error-middleware');
 
 connection.connect();
 
@@ -20,24 +22,20 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/user', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+    const error = new ApplicationError.NotFound('Not Found');
+    error.statusCode = 404;
+    next(error);
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+app.use(ErrorHandler);
 
 app.listen(port, function() {
    console.log('Server started on port: ' + port);
 });
+
+module.exports = app;
