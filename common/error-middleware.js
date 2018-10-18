@@ -8,10 +8,12 @@ var ErrorHandler = function(error, req, res, next) {
         statusCode = 404;
     if (error instanceof ApplicationError.BadRequest)
         statusCode = 400;
-    if (error instanceof ApplicationError.Conflict)
-        statusCode = 409;
+    if (error instanceof ApplicationError.Unauthorized)
+        statusCode = 401;
     if (error instanceof ApplicationError.Forbidden)
         statusCode = 403;
+    if (error instanceof ApplicationError.Conflict)
+        statusCode = 409;
     if (error instanceof ApplicationError.InternalServerError)
         statusCode = 500;
     res.status(statusCode || 500);

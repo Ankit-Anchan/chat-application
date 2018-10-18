@@ -1,5 +1,7 @@
+'use strict';
 const UserRepo = require('../repository/user.repository');
 const bcrypt = require('bcryptjs');
+const q = require('q');
 const UserService = {};
 
 UserService.createUser = function(user) {
@@ -11,10 +13,10 @@ UserService.login = function(username, password) {
     var deferred = q.defer();
     UserRepo.getUserByMobileNumber(username)
         .then(function(user) {
-            if(bcrypt.compareSync(user.password, password)) {
+            if(bcrypt.compareSync(password, user.password)) {
                 deferred.resolve(user);
             }
-            deferred.reject(username);
+            deferred.reject();
         },
         function(err) {
             deferred.reject(err);

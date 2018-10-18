@@ -6,20 +6,21 @@ const User = require('../model/user.model');
 
 UserRepository.createUser = function(user) {
     var deferred = q.defer();
-    user.save(function(err, ) {
+    user.save(function(err, _user) {
         if(err) {
             deferred.reject(err);
         }
-        deferred.resolve(user);
+        deferred.resolve(_user);
     });
     return deferred.promise;
 };
 
 UserRepository.getUserByMobileNumber = function(mobileNumber) {
+    var deferred = q.defer();
     User.findOne({mobile_number: mobileNumber})
         .lean()
         .exec(function(err, user) {
-            if(err) {
+            if(!user) {
                 deferred.reject(err);
             }
             deferred.resolve(user);

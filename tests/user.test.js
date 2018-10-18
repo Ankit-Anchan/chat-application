@@ -13,11 +13,9 @@ chai.use(chaiHttp);
  Remove all users from the database
  */
 
-describe('Users removing all data from User table', function() {
-    beforeEach(function(done) {
-        User.remove({}, (err) => {
-            done();
-        });
+before(function(done) {
+    User.remove({}, (err) => {
+        done();
     });
 });
 
@@ -82,7 +80,7 @@ describe('GET/:mobile_number', function() {
     });
 });
 
-describe('POST /add ', function() {
+describe('POST /user/add', function() {
     it('add user without mobile number, it should return error', function(done) {
         let user = {
             firstname: 'Ankit',
@@ -100,4 +98,23 @@ describe('POST /add ', function() {
         done();
     });
 
+});
+
+
+describe('POST', function() {
+    it('it should return token', function(done) {
+        let requestBody = {
+            username: '1234567890',
+            password: 'qwerty'
+        };
+        chai.request(server)
+            .post('/user/auth/login')
+            .send(requestBody)
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                assert.equal(res.body.auth, true, 'Successfully Authenticated');
+            });
+        done();
+    });
 });
