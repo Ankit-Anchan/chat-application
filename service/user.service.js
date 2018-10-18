@@ -3,7 +3,6 @@ const bcrypt = require('bcryptjs');
 const UserService = {};
 
 UserService.createUser = function(user) {
-    console.log(user);
     user.password = bcrypt.hashSync(user.password, 10);
     return UserRepo.createUser(user);
 };
@@ -27,5 +26,8 @@ UserService.getAllUsers = function() {
     return UserRepo.getAllUsers();
 };
 
+UserService.getUserByMobileNumber = function(mobileNunber) {
+    return UserRepo.getUserByMobileNumber(mobileNunber);
+};
 
 module.exports = UserService;

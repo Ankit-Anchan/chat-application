@@ -36,7 +36,7 @@ router.get('/list', function(req, res, next) {
 });
 
 router.get('/:mobile_number', function(req, res, next) {
-    res.send('respond with a resource');1
+
 });
 
 
