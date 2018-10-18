@@ -23,6 +23,18 @@ describe('Users', function() {
 });
 
 
+describe('GET /user/list', function(done) {
+    it('it should return 404', function(done) {
+        chai.request(server)
+            .get('/user/list')
+            .end(function(err, res) {
+                res.should.have.status(404);
+            });
+        done();
+    });
+});
+
+
 describe('POST /user/add', function() {
     it('it should Add a new user', function(done) {
         let user = {
