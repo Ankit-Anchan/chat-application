@@ -4,7 +4,7 @@ const UserRepository = {};
 
 const User = require('../model/user.model');
 
-UserRepository.createUser = function(user) {
+UserRepository.createUser = (user) => {
     var deferred = q.defer();
     user.save(function(err, _user) {
         if(err) {
@@ -15,9 +15,9 @@ UserRepository.createUser = function(user) {
     return deferred.promise;
 };
 
-UserRepository.getUserByMobileNumber = function(mobileNumber) {
+UserRepository.getUserByMobileNumber = (mobileNumber) => {
     var deferred = q.defer();
-    User.findOne({mobile_number: mobileNumber})
+    User.findOne({mobile_number: mobileNumber}, { password: 0 })
         .lean()
         .exec(function(err, user) {
             if(!user) {
@@ -28,7 +28,7 @@ UserRepository.getUserByMobileNumber = function(mobileNumber) {
     return deferred.promise;
 };
 
-UserRepository.getAllUsers = function() {
+UserRepository.getAllUsers = () => {
     var deferred = q.defer();
     User.find({}, null, {})
         .lean()

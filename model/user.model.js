@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
@@ -16,7 +17,7 @@ const UserSchema = new Schema({
 });
 
 UserSchema.pre('save', next => {
-    now = new Date();
+    now = Date.now;
     if(!this.created_at) {
         this.created_at = now;
     }

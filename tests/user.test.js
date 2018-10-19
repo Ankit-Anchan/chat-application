@@ -19,8 +19,8 @@ before(function(done) {
     });
 });
 
-describe('POST /user/add', function() {
-    it('it should Add a new user', function(done) {
+describe('POST /user/add', () => {
+    it('it should Add a new user', (done) => {
         let user = {
             firstname: 'Ankit',
             lastname: 'Anchan',
@@ -31,21 +31,20 @@ describe('POST /user/add', function() {
         chai.request(server)
             .post('/user/add')
             .send(user)
-            .end(function(err, res) {
+            .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('object');
             });
-        done();
+        done()
     });
-
 });
 
 
-describe('GET /user/list', function() {
-    it('it should list all users', function(done) {
+describe('GET /user/list', () => {
+    it('it should list all users', (done) => {
         chai.request(server)
             .get('/user/list')
-            .end(function(err, res) {
+            .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('array');
                 res.body.length.should.be.eql(1);
@@ -54,12 +53,12 @@ describe('GET /user/list', function() {
     });
 });
 
-describe('GET /user/:mobile_number', function() {
-    it('it should return a single user given mobile number', function(done) {
+describe('GET /user/:mobile_number', () => {
+    it('it should return a single user given mobile number', (done) => {
         let mobileNumber = '1234567890';
         chai.request(server)
             .get('/user/' + mobileNumber)
-            .end(function(err, res) {
+            .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('object');
                 assert.equal(res.body.mobile_number, mobileNumber, 'Mobile number requested matches with response mobile number');
@@ -68,20 +67,20 @@ describe('GET /user/:mobile_number', function() {
     });
 });
 
-describe('GET/:mobile_number', function() {
-    it('it should return 404', function(done) {
+describe('GET/:mobile_number', () => {
+    it('it should return 404', (done) => {
         let mobileNumber = '0987654321';
         chai.request(server)
             .get('/user/' + mobileNumber)
-            .end(function(err, res) {
+            .end((err, res) => {
                 res.should.have.status(404);
             });
         done();
     });
 });
 
-describe('POST /user/add', function() {
-    it('add user without mobile number, it should return error', function(done) {
+describe('POST /user/add', () => {
+    it('add user without mobile number, it should return error', (done) => {
         let user = {
             firstname: 'Ankit',
             lastname: 'Anchan',
@@ -91,7 +90,7 @@ describe('POST /user/add', function() {
         chai.request(server)
             .post('/user/add')
             .send(user)
-            .end(function(err, res) {
+            .end((err, res) => {
                 res.should.have.status(500);
                 res.body.should.be.a('object');
             });
@@ -101,8 +100,8 @@ describe('POST /user/add', function() {
 });
 
 
-describe('POST', function() {
-    it('it should return token', function(done) {
+describe('POST', () => {
+    it('it should return token', (done) => {
         let requestBody = {
             username: '1234567890',
             password: 'qwerty'

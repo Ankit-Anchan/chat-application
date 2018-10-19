@@ -9,6 +9,17 @@ const ContactListSchema = new Schema({
     modified_at: {type: Date, defualt: Date.now}
 });
 
+ContactListSchema.pre('save', (next) => {
+    const now = Date.now;
+    if(!this.created_at) {
+        this.created_at = now;
+    }
+    if(!this.modified_at) {
+        this.modified_at = now;
+    }
+    next();
+});
+
 const ContactList = mongoose.model('CONTACT_LIST', ContactListSchema);
 
 module.exports = ContactList;

@@ -4,12 +4,12 @@ const bcrypt = require('bcryptjs');
 const q = require('q');
 const UserService = {};
 
-UserService.createUser = function(user) {
+UserService.createUser = (user) => {
     user.password = bcrypt.hashSync(user.password, 10);
     return UserRepo.createUser(user);
 };
 
-UserService.login = function(username, password) {
+UserService.login = (username, password) => {
     var deferred = q.defer();
     UserRepo.getUserByMobileNumber(username)
         .then(function(user) {
@@ -24,11 +24,11 @@ UserService.login = function(username, password) {
     return deferred.promise;
 };
 
-UserService.getAllUsers = function() {
+UserService.getAllUsers = () => {
     return UserRepo.getAllUsers();
 };
 
-UserService.getUserByMobileNumber = function(mobileNunber) {
+UserService.getUserByMobileNumber = (mobileNunber) => {
     return UserRepo.getUserByMobileNumber(mobileNunber);
 };
 

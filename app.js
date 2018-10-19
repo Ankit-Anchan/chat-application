@@ -6,6 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users.route');
+const contactRouter = require('./routes/contact.route');
 const connection = require('./config/db.config');
 const ApplicationError = require('./common/error');
 const ErrorHandler = require('./common/error-middleware');
@@ -23,9 +24,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
+app.use('/user/contact', contactRouter);
+
+app.use('*', (req, res, next) => {
+    const error = new ApplicationError.NotFound('Not Found');
+    error.statusCode = 404;
+    next(error);
+});
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
     const error = new ApplicationError.NotFound('Not Found');
     error.statusCode = 404;
     next(error);
@@ -34,7 +42,7 @@ app.use(function(req, res, next) {
 // error handler
 app.use(ErrorHandler);
 
-app.listen(port, function() {
+app.listen(port, () => {
    console.log('Server started on port: ' + port);
 });
 
