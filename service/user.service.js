@@ -13,6 +13,7 @@ UserService.login = (username, password) => {
     var deferred = q.defer();
     UserRepo.getUserByMobileNumber(username)
         .then(function(user) {
+            console.log(user);
             if(bcrypt.compareSync(password, user.password)) {
                 deferred.resolve(user);
             }

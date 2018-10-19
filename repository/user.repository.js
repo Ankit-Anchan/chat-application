@@ -17,7 +17,7 @@ UserRepository.createUser = (user) => {
 
 UserRepository.getUserByMobileNumber = (mobileNumber) => {
     var deferred = q.defer();
-    User.findOne({mobile_number: mobileNumber}, { password: 0 })
+    User.findOne({mobile_number: mobileNumber})
         .lean()
         .exec(function(err, user) {
             if(!user) {

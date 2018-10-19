@@ -13,13 +13,16 @@ chai.use(chaiHttp);
  Remove all users from the database
  */
 
+let token;
+
 before(function(done) {
     User.remove({}, (err) => {
         done();
     });
 });
 
-describe('POST /user/add', () => {
+
+describe('POST /api/v1/auth/user/add', () => {
     it('it should Add a new user', (done) => {
         let user = {
             firstname: 'Ankit',
@@ -29,7 +32,7 @@ describe('POST /user/add', () => {
             is_admin: true
         };
         chai.request(server)
-            .post('/user/add')
+            .post('/api/v1/auth/user/add')
             .send(user)
             .end((err, res) => {
                 res.should.have.status(200);
@@ -39,11 +42,59 @@ describe('POST /user/add', () => {
     });
 });
 
+describe('POST /api/v1/auth/user/add', () => {
+    it('add user without mobile number, it should return error', (done) => {
+        let user = {
+            firstname: 'Ankit',
+            lastname: 'Anchan',
+            password: 'qwerty',
+            is_admin: false
+        };
+        chai.request(server)
+            .post('/api/v1/auth/user/add')
+            .send(user)
+            .end((err, res) => {
+                res.should.have.status(500);
+                res.body.should.be.a('object');
+            });
+        done();
+    });
 
-describe('GET /user/list', () => {
+});
+
+describe('POST login and /me/info', () => {
+    it('it should return token, and login with the token', (done) => {
+        let requestBody = {
+            username: '1234567890',
+            password: 'qwerty'
+        };
+        chai.request(server)
+            .post('/api/v1/auth/login')
+            .send(requestBody)
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                assert.equal(res.body.auth, true, 'Successfully Authenticated');
+                token = res.body.token;
+                chai.request(server)
+                    .get('/api/v1/user/me/info')
+                    .set('x-authorization', token)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        assert.equal(res.body.mobile_number, requestBody.username, 'username for login and retrieved from token are equal');
+                    });
+            });
+
+        done();
+    });
+});
+
+describe('GET /api/v1/user/list', () => {
     it('it should list all users', (done) => {
         chai.request(server)
-            .get('/user/list')
+            .get('/api/v1/user/list')
+            .set('x-authorization', token)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('array');
@@ -53,11 +104,12 @@ describe('GET /user/list', () => {
     });
 });
 
-describe('GET /user/:mobile_number', () => {
+describe('GET /api/v1/user/:mobile_number', () => {
     it('it should return a single user given mobile number', (done) => {
         let mobileNumber = '1234567890';
         chai.request(server)
-            .get('/user/' + mobileNumber)
+            .get('/api/v1/user/' + mobileNumber)
+            .set('x-authorization', token)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('object');
@@ -71,7 +123,8 @@ describe('GET/:mobile_number', () => {
     it('it should return 404', (done) => {
         let mobileNumber = '0987654321';
         chai.request(server)
-            .get('/user/' + mobileNumber)
+            .get('/api/v1/user/' + mobileNumber)
+            .set('x-authorization', token)
             .end((err, res) => {
                 res.should.have.status(404);
             });
@@ -79,40 +132,13 @@ describe('GET/:mobile_number', () => {
     });
 });
 
-describe('POST /user/add', () => {
-    it('add user without mobile number, it should return error', (done) => {
-        let user = {
-            firstname: 'Ankit',
-            lastname: 'Anchan',
-            password: 'qwerty',
-            is_admin: false
-        };
+
+describe('GET /me/info without token', () => {
+    it('it should return UnAuthorized error with status 401', (done) => {
         chai.request(server)
-            .post('/user/add')
-            .send(user)
+            .get('/api/v1/user/me/info')
             .end((err, res) => {
-                res.should.have.status(500);
-                res.body.should.be.a('object');
-            });
-        done();
-    });
-
-});
-
-
-describe('POST', () => {
-    it('it should return token', (done) => {
-        let requestBody = {
-            username: '1234567890',
-            password: 'qwerty'
-        };
-        chai.request(server)
-            .post('/user/auth/login')
-            .send(requestBody)
-            .end((err, res) => {
-                res.should.have.status(200);
-                res.body.should.be.a('object');
-                assert.equal(res.body.auth, true, 'Successfully Authenticated');
+                res.should.have.status(401);
             });
         done();
     });

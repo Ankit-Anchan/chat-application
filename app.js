@@ -6,10 +6,12 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users.route');
+const authRouter = require('./routes/auth.route');
 const contactRouter = require('./routes/contact.route');
 const connection = require('./config/db.config');
 const ApplicationError = require('./common/error');
 const ErrorHandler = require('./common/error-middleware');
+const verifyToken = require('./common/token.verify');
 
 connection.connect();
 
@@ -22,9 +24,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/user', usersRouter);
-app.use('/user/contact', contactRouter);
+app.use('/api/v1/', indexRouter);
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/user', verifyToken, usersRouter);
+app.use('/api/v1/user/contact', verifyToken, contactRouter);
 
 app.use('*', (req, res, next) => {
     const error = new ApplicationError.NotFound('Not Found');
