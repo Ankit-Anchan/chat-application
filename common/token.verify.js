@@ -14,7 +14,8 @@ const verifyToken = (req, res, next) => {
             return next(new ApplicationError.Unauthorized("Failed to authenticate token."));
         }
         // if everything good, save to request for use in other routes
-        req.username = decoded.id;
+        req.username = decoded.username;
+        req.id = decoded.id;
         next();
     });
 };

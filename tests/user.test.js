@@ -37,8 +37,8 @@ describe('POST /api/v1/auth/user/add', () => {
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('object');
+                done();
             });
-        done()
     });
 });
 
@@ -56,8 +56,8 @@ describe('POST /api/v1/auth/user/add', () => {
             .end((err, res) => {
                 res.should.have.status(500);
                 res.body.should.be.a('object');
+                done();
             });
-        done();
     });
 
 });
@@ -83,10 +83,9 @@ describe('POST login and /me/info', () => {
                         res.should.have.status(200);
                         res.body.should.be.a('object');
                         assert.equal(res.body.mobile_number, requestBody.username, 'username for login and retrieved from token are equal');
+                        done();
                     });
             });
-
-        done();
     });
 });
 
@@ -98,9 +97,8 @@ describe('GET /api/v1/user/list', () => {
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('array');
-                res.body.length.should.be.eql(1);
+                done();
             });
-        done();
     });
 });
 
@@ -114,8 +112,8 @@ describe('GET /api/v1/user/:mobile_number', () => {
                 res.should.have.status(200);
                 res.body.should.be.a('object');
                 assert.equal(res.body.mobile_number, mobileNumber, 'Mobile number requested matches with response mobile number');
+                done();
             });
-        done();
     });
 });
 
@@ -127,8 +125,8 @@ describe('GET/:mobile_number', () => {
             .set('x-authorization', token)
             .end((err, res) => {
                 res.should.have.status(404);
+                done();
             });
-        done();
     });
 });
 
@@ -139,7 +137,7 @@ describe('GET /me/info without token', () => {
             .get('/api/v1/user/me/info')
             .end((err, res) => {
                 res.should.have.status(401);
+                done();
             });
-        done();
     });
 });
