@@ -22,7 +22,8 @@ router.post('/login', (req, res, next) => {
         .then((user) => {
             console.log(user);
             const token = jwt.sign({ id: user.mobile_number }, config[process.env.NODE_ENV].secret_key, {
-                expiresIn: 604800 // expires in 24 hours
+                expiresIn: 604800, // expires in 24 hours
+                algorithm:  "RS256"
             });
             res.status(200).send({ auth: true, token: token });
         })
