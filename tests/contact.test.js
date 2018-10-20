@@ -8,17 +8,19 @@ const should = chai.should();
 const server = require('../app');
 const User = require('../model/user.model');
 const Contact = require('../model/contact.model');
+const assert = chai.assert;
 chai.use(chaiHttp);
 
 before('', function(done) {
     User.remove({},(err) => {
-
+        Contact.remove({}, (err) => {
+            var user1 = new User({firstname: 'Issac', lastname: 'Newton', mobile_number: '2222222222', password: bcrypt.hashSync('pass123',10), is_admin: false});
+            user1.save((err, _user) => {});
+            var user2 = new User({firstname: 'Albert', lastname: 'Einstein', mobile_number: '1111111111', password: bcrypt.hashSync('pass123',10), is_admin: false});
+            user2.save((err, _user) => {});
+            done();
+        });
     });
-    var user1 = new User({firstname: 'Issac', lastname: 'Newton', mobile_number: '2222222222', password: bcrypt.hashSync('pass123',10), is_admin: false});
-    user1.save((err, _user) => {});
-    var user2 = new User({firstname: 'Albert', lastname: 'Einstein', mobile_number: '1111111111', password: bcrypt.hashSync('pass123',10), is_admin: false});
-    user2.save((err, _user) => {});
-    done();
 });
 
 // beforeEach('', (done) => {
@@ -32,6 +34,8 @@ before('', function(done) {
 //             done();
 //         });
 // });
+
+let userToken;
 
 describe('POST /api/v1/contact/request/send', function() {
     it('User ', function(done) {
@@ -51,20 +55,18 @@ describe('POST /api/v1/contact/request/send', function() {
             .end((err, res) => {
                 console.log(res.body);
                 let token = res.body.token;
+                userToken = token;
                 chai.request(server)
                     .get('/api/v1/user/2222222222')
                     .set('x-authorization', token)
                     .end((err,res) => {
                         user1 = res.body;
-                        requestPayload.sent_to = user1._id;
-                        console.log('payload');
-                        console.log(user1);
-                        console.log(requestPayload);
                         chai.request(server)
                             .get('/api/v1/user/1111111111')
                             .set('x-authorization', token)
                             .end((err, res) => {
                                 user2 = res.body;
+                                requestPayload.sent_to = user2._id;
                                 chai.request(server)
                                     .post('/api/v1/contact/request/send')
                                     .set('x-authorization', token)
@@ -77,6 +79,40 @@ describe('POST /api/v1/contact/request/send', function() {
                             });
                     });
             });
+    });
+});
 
+
+describe('GET /request/pending and POST /request/accept/:id' , () => {
+    it('first get list of pending request and accept one request from the list', (done) => {
+        chai.request(server)
+            .get('/api/v1/contact/request/pending')
+            .set('x-authorization', userToken)
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('array');
+                let pendingRequests = res.body;
+                assert.equal(pendingRequests.length, 1, 'Pending Request list length is equal to 1');
+                chai.request(server)
+                    .post('/api/v1/contact/request/accept/' + pendingRequests[0]._id)
+                    .set('x-authorization', userToken)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        done();
+                    });
+            });
+    })
+});
+
+describe('GET /contact/list', () => {
+    it('it should list contacts who have accepted request', (done) => {
+        chai.request(server)
+            .get('/api/v1/contact/list')
+            .set('x-authorization', userToken)
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('array');
+                done();
+            });
     });
 });

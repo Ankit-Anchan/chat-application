@@ -5,6 +5,7 @@ const chaiHttp = require('chai-http');
 const assert = chai.assert;
 const server = require('../app');
 const User = require('../model/user.model');
+const Contact = require('../model/contact.model');
 const should = chai.should();
 
 chai.use(chaiHttp);
@@ -16,9 +17,13 @@ chai.use(chaiHttp);
 let token;
 
 before(function(done) {
-    User.remove({}, (err) => {
-        done();
+    User.remove({},(err) => {
+        Contact.remove({}, (err) => {
+            done();
+        });
     });
+
+
 });
 
 
@@ -130,6 +135,27 @@ describe('GET/:mobile_number', () => {
     });
 });
 
+
+describe('GET /details/id', () => {
+   it('get user info by id', (done) => {
+       let mobileNumber = '1234567890';
+       console.log('token = ' + token);
+       chai.request(server)
+           .get('/api/v1/user/' + mobileNumber)
+           .set('x-authorization', token)
+           .end((err, res) => {
+               res.should.have.status(200);
+               chai.request(server)
+                   .get('/api/v1/user/details/' + res.body._id)
+                   .set('x-authorization', token)
+                   .end((err, res) => {
+                       res.should.have.status(200);
+                       assert.equal(mobileNumber, res.body.mobile_number, 'User info provides correct mobile number');
+                       done();
+                   });
+           });
+    });
+});
 
 describe('GET /me/info without token', () => {
     it('it should return UnAuthorized error with status 401', (done) => {

@@ -41,7 +41,28 @@ UserRepository.getAllUsers = () => {
     return deferred.promise;
 };
 
+UserRepository.findById = (id) => {
+    let deferred = q.defer();
+    User.findOne({_id: id})
+        .exec((err, user) => {
+           if(err) {
+               deferred.reject(err);
+           }
+           deferred.resolve(user);
+        });
+    return deferred.promise;
+};
 
+UserRepository.update = (id, user) => {
+    let deferred = q.defer();
+    User.updateOne({_id: id}, user, (err, user) => {
+        if(err) {
+            deferred.reject(err);
+        }
+        deferred.resolve(user);
+    });
+    return deferred.promise;
+};
 
 module.exports = UserRepository;
 

@@ -29,6 +29,16 @@ router.get('/:mobile_number', (req, res, next) => {
         });
 });
 
+router.get('/details/:id', (req, res, next) => {
+    service.findById(req.params.id)
+        .then(user => {
+            res.status(200).send(user);
+        })
+        .catch(err => {
+            return next(new ApplicationError.NotFound('Cannot find user'));
+        });
+});
+
 router.get('/me/info', (req, res, next) => {
     service.getUserByMobileNumber(req.username)
         .then((user) => {

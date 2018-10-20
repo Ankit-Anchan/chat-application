@@ -28,6 +28,10 @@ UserService.getAllUsers = () => {
     return UserRepo.getAllUsers();
 };
 
+UserService.findById = (id) => {
+    return UserRepo.findById(id);
+};
+
 UserService.getUserByMobileNumber = (mobileNunber) => {
     return UserRepo.getUserByMobileNumber(mobileNunber);
 };
