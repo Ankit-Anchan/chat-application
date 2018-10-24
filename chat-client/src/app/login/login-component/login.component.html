@@ -1,0 +1,34 @@
+<div class="loginContainer">
+  <!--<div style="padding:10px">-->
+
+      <div style="text-align: center;">
+        <h4>Login</h4>
+      </div>
+  <form>
+    <table cellspacing="0" style="width:100%">
+      <tr>
+        <td>
+          <mat-form-field class="full-width">
+            <input type="text"  matInput name="mobile_number" id="mobile_number" [(ngModel)]="userLogin.username" placeholder="Mobile Number"required/>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-form-field class="full-width">
+            <input class="" type="password" matInput name="password" id="password" [(ngModel)]="userLogin.password" placeholder="Password" required/>
+          </mat-form-field>
+        </td>
+      </tr>
+    </table>
+  </form>
+
+  <p>
+    <button mat-raised-button class="full-width" color="primary" (click)="loginUser()">LOG IN</button>
+  </p>
+
+  <div class="" id="errorMessage">
+  </div>
+
+  <!--</div>-->
+</div>

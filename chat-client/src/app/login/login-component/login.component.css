@@ -1,0 +1,27 @@
+.loginContainer {
+  height: 50%;
+  width: 35%;
+  background-color: #f3f3f3;
+  padding: 30px;
+  margin: auto;
+  margin-top: 10%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+@media screen and (max-width: 650px) {
+  .loginContainer {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #f3f3f3;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+}

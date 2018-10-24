@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const cors = require('cors');
 
 const connection = require('./config/db.config');
 connection.connect();
@@ -21,6 +22,7 @@ var app = express();
 var port = process.env.PORT || 8080;
 
 app.use(logger('dev'));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -47,8 +49,9 @@ app.use((req, res, next) => {
 // error handler
 app.use(ErrorHandler);
 
-app.listen(port, () => {
-   console.log('Server started on port: ' + port);
-});
+var server = app.listen(port);
+console.log('Server started on port: ' + port);
 
-module.exports = app;
+
+module.exports = server;
+
