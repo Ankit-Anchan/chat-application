@@ -1,0 +1,62 @@
+<div class="RegistrationContainer">
+  <mat-card class="inside-container">
+  <div>
+      <div style="text-align: center;">
+        <h4>CREATE AN ACCOUNT</h4>
+      </div>
+    <form>
+      <table cellspacing="0" style="width:100%">
+        <tr>
+          <td>
+            <mat-form-field class="full-width">
+              <input type="text"  matInput name="firstname" id="firstname" [(ngModel)]="userRegistration.firstname" placeholder="First Name"required/>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <mat-form-field class="full-width">
+              <input type="text"  matInput name="lastname" id="lastname" [(ngModel)]="userRegistration.lastname" placeholder="Last Name"required/>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <mat-form-field class="full-width">
+              <input type="text"  matInput name="mobile_number" id="mobile_number" [(ngModel)]="userRegistration.mobile_number" placeholder="Mobile Number"required/>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <mat-form-field class="full-width">
+              <input class="" type="password" matInput name="password" id="password" [(ngModel)]="userRegistration.password" placeholder="Password" required/>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <mat-form-field class="full-width">
+              <input class="" type="password" matInput name="password" id="confirm-password" [(ngModel)]="confirm_password" placeholder="Confirm Password" required/>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </form>
+
+    <p>
+      <button mat-raised-button class="full-width" color="primary" (click)="registerUser()">CREATE AN ACCOUNT</button>
+    </p>
+    <mat-error align="center" style="font-size: 0.85em;">
+      {{errorMessage}}
+    </mat-error>
+    <div id="successMessage" style="color: #46dc00; text-align: center">
+      {{successMessage}}
+    </div>
+    <br>
+    <mat-hint>
+      <div style="text-align: center;">Already a User? <a routerLink="/login">Log In</a></div>
+    </mat-hint>
+  </div>
+  </mat-card>
+</div>

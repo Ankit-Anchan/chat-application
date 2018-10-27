@@ -9,7 +9,8 @@ import {
   MatIconModule,
   MatListModule,
   MatInputModule,
-  MatFormFieldModule
+  MatFormFieldModule,
+  MatCardModule
 } from '@angular/material';
 
 
@@ -35,7 +36,8 @@ import {
     MatSidenavModule,
     MatIconModule,
     MatListModule,
-    MatInputModule
+    MatInputModule,
+    MatCardModule
   ],
   declarations: [MyNavComponent]
 })

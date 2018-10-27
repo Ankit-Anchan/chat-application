@@ -4,6 +4,7 @@ import {UserLogin} from "../models/user-login.model";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Token} from "../models/token.model";
+import {UserRegistration} from "../models/user-registration.model";
 
 @Injectable()
 export class UserLoginService {
@@ -22,4 +23,8 @@ export class UserLoginService {
     return this.http.post<Token>(environment.server_url + 'api/v1/auth/login', httpBody ,{headers: this.httpHeader});
   }
 
+  registerUser(user: UserRegistration) {
+    const httpBody = JSON.stringify(user);
+    return this.http.post<Token>(environment.server_url + 'api/v1/auth/user/add', httpBody ,{headers: this.httpHeader});
+  }
 }

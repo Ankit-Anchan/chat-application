@@ -1,8 +1,8 @@
 <div class="loginContainer">
-  <!--<div style="padding:10px">-->
-
+  <mat-card class="inside-container">
+  <div>
       <div style="text-align: center;">
-        <h4>Login</h4>
+        <h4>LOG IN</h4>
       </div>
   <form>
     <table cellspacing="0" style="width:100%">
@@ -26,9 +26,19 @@
   <p>
     <button mat-raised-button class="full-width" color="primary" (click)="loginUser()">LOG IN</button>
   </p>
+    <mat-error align="center" style="font-size: 0.85em;">
+        {{errorMessage}}
+    </mat-error>
+    <div id="successMessage" style="color: #46dc00; text-align: center">
+      {{successMessage}}
+    </div>
+    <br>
+  <mat-hint>
+    <div style="text-align: center;">
+      New To Crispy Chat? <a routerLink="/register">Register</a>
+    </div>
+  </mat-hint>
 
-  <div class="" id="errorMessage">
   </div>
-
-  <!--</div>-->
+  </mat-card>
 </div>

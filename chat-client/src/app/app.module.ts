@@ -11,10 +11,12 @@ import {UserLoginService} from "./services/user-login.service";
 import {CookieModule} from "ngx-cookie";
 import {HttpClientModule} from "@angular/common/http";
 import {LoginModule} from "./login/login.module";
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,4 @@
-.loginContainer {
+.RegistrationContainer {
   height: auto;
   width: 35%;
   background-color: #f3f3f3;
@@ -16,7 +16,7 @@
 }
 
 @media screen and (max-width: 650px) {
-  .loginContainer {
+  .RegistrationContainer {
     margin: 0;
     height: 100%;
     width: 100%;
@@ -24,7 +24,7 @@
     box-sizing: border-box;
   }
   .inside-container {
-    margin-top: 25%;
+    margin-top: 5%;
     background: #FFFFFF;
     padding: 20px;
   }

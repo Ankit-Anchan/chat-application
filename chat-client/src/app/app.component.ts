@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {Router} from "@angular/router";
+import {CustomCookieService} from "./services/custom-cookie.service";
 
 @Component({
   selector: 'app-root',
@@ -8,8 +9,13 @@ import {Router} from "@angular/router";
 })
 export class AppComponent {
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private cookieService: CustomCookieService) {
     console.log('App component constructor');
-    this.router.navigate(['login', {}]);
+    if(this.cookieService.getCookie('token') && this.cookieService.getCookie('token') !== '') {
+      this.router.navigate(['chat', {}]);
+    }
+    else {
+      this.router.navigate(['home', {}]);
+    }
   }
 }
