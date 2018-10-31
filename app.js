@@ -8,15 +8,15 @@ const cors = require('cors');
 const connection = require('./config/db.config');
 connection.connect();
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users.route');
-const contactRouter = require('./routes/contact.route');
-const authRouter = require('./routes/auth.route');
 
 const ApplicationError = require('./common/error');
 const ErrorHandler = require('./common/error-middleware');
 const verifyToken = require('./common/token.verify');
 
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users.route');
+const contactRouter = require('./routes/contact.route');
+const authRouter = require('./routes/auth.route');
 
 var app = express();
 var port = process.env.PORT || 8080;
@@ -51,7 +51,6 @@ app.use(ErrorHandler);
 
 var server = app.listen(port);
 console.log('Server started on port: ' + port);
-
 
 module.exports = server;
 

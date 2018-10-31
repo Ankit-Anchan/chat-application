@@ -39,8 +39,6 @@ let userToken;
 
 describe('POST /api/v1/contact/request/send', function() {
     it('User ', function(done) {
-        let user1;
-        let user2;
         let requestPayload = {
             sent_to: '',
         };
@@ -60,13 +58,13 @@ describe('POST /api/v1/contact/request/send', function() {
                     .get('/api/v1/user/2222222222')
                     .set('x-authorization', token)
                     .end((err,res) => {
-                        user1 = res.body;
+                        let user1 = res.body;
+                        requestPayload.sent_to = user1._id;
                         chai.request(server)
                             .get('/api/v1/user/1111111111')
                             .set('x-authorization', token)
                             .end((err, res) => {
-                                user2 = res.body;
-                                requestPayload.sent_to = user2._id;
+                                let user2 = res.body;
                                 chai.request(server)
                                     .post('/api/v1/contact/request/send')
                                     .set('x-authorization', token)

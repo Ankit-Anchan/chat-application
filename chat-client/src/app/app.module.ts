@@ -10,7 +10,7 @@ import {CustomCookieService} from "./services/custom-cookie.service";
 import {UserLoginService} from "./services/user-login.service";
 import {CookieModule} from "ngx-cookie";
 import {HttpClientModule} from "@angular/common/http";
-import {LoginModule} from "./login/login.module";
+import {MessagingService} from './services/messaging.service';
 import { HomeComponent } from './home/home.component';
 
 @NgModule({
@@ -27,7 +27,7 @@ import { HomeComponent } from './home/home.component';
     HttpClientModule,
     AppRoutingModule
   ],
-  providers: [UserLoginService, CustomCookieService],
+  providers: [UserLoginService, CustomCookieService, MessagingService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

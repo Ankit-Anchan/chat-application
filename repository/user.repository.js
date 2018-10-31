@@ -43,7 +43,7 @@ UserRepository.getAllUsers = () => {
 
 UserRepository.findById = (id) => {
     let deferred = q.defer();
-    User.findOne({_id: id})
+    User.findById(id)
         .exec((err, user) => {
            if(err) {
                deferred.reject(err);
@@ -61,6 +61,28 @@ UserRepository.update = (id, user) => {
         }
         deferred.resolve(user);
     });
+    return deferred.promise;
+};
+
+UserRepository.searchUser = (searchString, id) => {
+    let deferred = q.defer();
+    User.find({'mobile_number': { $regex: searchString + '*.'}})
+        .populate('user', 'mobile_number firstname lastname')
+        .populate({
+                    path: 'contact_list',
+                    select: { _id: 1, status: 1, sent_by: 1, sent_to: 1},
+                    match: {
+                        $or: [{sent_to: id}, {sent_by: id}]
+                    }
+                })
+        .lean()
+        .exec((err, list) => {
+                if(err) {
+                    deferred.reject(err);
+                }
+                deferred.resolve(list)
+            }
+        );
     return deferred.promise;
 };
 

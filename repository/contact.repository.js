@@ -17,7 +17,7 @@ ContactRepo.addContactRequest = (contact) => {
 
 ContactRepo.findById = (id) => {
     let deferred = q.defer();
-    Contact.findOne({_id: id})
+    Contact.findById(id)
         .exec((err, contact) => {
             if(err) {
                 deferred.reject(err);
@@ -59,8 +59,8 @@ ContactRepo.getContactList = (id) => {
     const subDocumentProjection = ['firstname', 'lastname', 'mobile_number'];
     Contact.find({$or: [{sent_to: id}, {sent_by: id}]})
         .and({status: util.status.ACCEPTED})
-        .populate({ path: 'sent_to', select: subDocumentProjection, match: {_id: {$ne: id}} })
-        .populate({'path': 'sent_by', select: subDocumentProjection, match: {_id: {$ne: id}}  })
+        .populate({ path: 'sent_to', match: {_id: {$ne: id}} })
+        .populate({ path: 'sent_by', match: {_id: {$ne: id}}  })
         .lean()
         .exec((err, list) => {
             if(err) {

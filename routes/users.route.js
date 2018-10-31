@@ -49,4 +49,14 @@ router.get('/me/info', (req, res, next) => {
         });
 });
 
+router.post('/search', (req, res, next) => {
+    service.searchUser(req.body.searchString, req.id)
+        .then((_user) => {
+            res.status(200).send(_user)
+        })
+        .catch(err => {
+            return next(new ApplicationError.NotFound("Cannot find any users"))
+        });
+});
+
 module.exports = router;

@@ -10,7 +10,8 @@ import {
   MatListModule,
   MatInputModule,
   MatFormFieldModule,
-  MatCardModule
+  MatCardModule, MatGridListModule,
+  MatProgressSpinnerModule
 } from '@angular/material';
 
 
@@ -37,7 +38,9 @@ import {
     MatIconModule,
     MatListModule,
     MatInputModule,
-    MatCardModule
+    MatCardModule,
+    MatGridListModule,
+    MatProgressSpinnerModule
   ],
   declarations: [MyNavComponent]
 })

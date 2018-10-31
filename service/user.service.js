@@ -36,4 +36,9 @@ UserService.getUserByMobileNumber = (mobileNunber) => {
     return UserRepo.getUserByMobileNumber(mobileNunber);
 };
 
+UserService.searchUser = (searchString, id) => {
+    return UserRepo.searchUser(searchString, id);
+};
+
+
 module.exports = UserService;

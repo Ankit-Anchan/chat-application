@@ -13,9 +13,6 @@ export class UserLoginService {
     .set('content-type', 'application/json');
 
   constructor(private router: Router, private http: HttpClient) {
-    // if(this.cookieService.getCookie('user-info')) {
-    //   this.router.navigate(['/chat', {}]);
-    // }
   }
 
   loginUser(user: UserLogin) {
