@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.ObjectId;
-let Contact = require('../model/contact.model');
+const User = require('../model/user.model');
+const Contact = require('../model/contact.model');
 const q = require('q');
 const util = require('../common/util');
 const ContactRepo = {};
@@ -32,7 +33,6 @@ ContactRepo.getPendingList = (_id) => {
     console.log(_id);
     Contact.find({ sent_to: _id })
         .and({status: util.status.PENDING})
-        .populate('sent_to')
         .populate('sent_by')
         .exec((err, pendingRequests) => {
             if(err) {
@@ -56,11 +56,12 @@ ContactRepo.updateContactRequest  = (id, contact) => {
 
 ContactRepo.getContactList = (id) => {
     let deferred = q.defer();
-    const subDocumentProjection = ['firstname', 'lastname', 'mobile_number'];
+    const subDocumentProjection = 'firstname lastname mobile_number';
     Contact.find({$or: [{sent_to: id}, {sent_by: id}]})
         .and({status: util.status.ACCEPTED})
-        .populate({ path: 'sent_to', match: {_id: {$ne: id}} })
-        .populate({ path: 'sent_by', match: {_id: {$ne: id}}  })
+        .select('sent_to sent_by status')
+        .populate({ path: 'sent_to', match: {_id: {$ne: id}} , select: subDocumentProjection})
+        .populate({ path: 'sent_by', match: {_id: {$ne: id}}, select: subDocumentProjection})
         .lean()
         .exec((err, list) => {
             if(err) {

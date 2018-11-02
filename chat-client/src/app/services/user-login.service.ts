@@ -17,7 +17,14 @@ export class UserLoginService {
 
   loginUser(user: UserLogin) {
     const httpBody = JSON.stringify(user);
-    return this.http.post<Token>(environment.server_url + 'api/v1/auth/login', httpBody ,{headers: this.httpHeader});
+    return this.http.post<Token>(environment.server_url + 'api/v1/auth/login', httpBody ,{ headers: this.httpHeader});
+  }
+
+  getUserInfo(token: string) {
+    const httpHeader = new HttpHeaders()
+    .set('content-type', 'application/json')
+    .set('x-authorization', token);
+    return this.http.get(environment.server_url + 'api/v1/user/me/info' , {headers: httpHeader});
   }
 
   registerUser(user: UserRegistration) {

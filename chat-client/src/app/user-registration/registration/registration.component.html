@@ -23,7 +23,7 @@
         <tr>
           <td>
             <mat-form-field class="full-width">
-              <input type="text"  matInput name="mobile_number" id="mobile_number" [(ngModel)]="userRegistration.mobile_number" placeholder="Mobile Number"required/>
+              <input type="number"  matInput name="mobile_number" id="mobile_number" [(ngModel)]="userRegistration.mobile_number" placeholder="Mobile Number" max="10" required/>
             </mat-form-field>
           </td>
         </tr>

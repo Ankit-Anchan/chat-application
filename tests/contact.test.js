@@ -46,6 +46,7 @@ describe('POST /api/v1/contact/request/send', function() {
             username: '1111111111',
             password: 'pass123'
         };
+        let user2Token;
         chai.request(server)
             .post('/api/v1/auth/login')
             .set('content-type', 'application/json')
@@ -55,19 +56,25 @@ describe('POST /api/v1/contact/request/send', function() {
                 let token = res.body.token;
                 userToken = token;
                 chai.request(server)
-                    .get('/api/v1/user/2222222222')
-                    .set('x-authorization', token)
+                .post('/api/v1/auth/login')
+                .set('content-type', 'application/json')
+                .send({username: '2222222222', password: 'pass123'})
+                .end((err, res) => {
+                    user2Token = res.body.token;
+                    chai.request(server)
+                    .get('/api/v1/user/me/info')
+                    .set('x-authorization', user2Token)
                     .end((err,res) => {
-                        let user1 = res.body;
-                        requestPayload.sent_to = user1._id;
+                        let user2 = res.body;
                         chai.request(server)
                             .get('/api/v1/user/1111111111')
                             .set('x-authorization', token)
                             .end((err, res) => {
-                                let user2 = res.body;
+                                let user1 = res.body;
+                                requestPayload.sent_to = user1._id;
                                 chai.request(server)
                                     .post('/api/v1/contact/request/send')
-                                    .set('x-authorization', token)
+                                    .set('x-authorization', user2Token)
                                     .send(requestPayload)
                                     .end((err, res) => {
                                         res.should.have.status(200);
@@ -76,6 +83,7 @@ describe('POST /api/v1/contact/request/send', function() {
                                     });
                             });
                     });
+                });
             });
     });
 });
@@ -83,6 +91,8 @@ describe('POST /api/v1/contact/request/send', function() {
 
 describe('GET /request/pending and POST /request/accept/:id' , () => {
     it('first get list of pending request and accept one request from the list', (done) => {
+        console.log('getting pending request and accepting');
+        console.log('token = ' + userToken);
         chai.request(server)
             .get('/api/v1/contact/request/pending')
             .set('x-authorization', userToken)
@@ -104,6 +114,8 @@ describe('GET /request/pending and POST /request/accept/:id' , () => {
 
 describe('GET /contact/list', () => {
     it('it should list contacts who have accepted request', (done) => {
+        console.log('getting contact list');
+        console.log('token = ' + userToken);
         chai.request(server)
             .get('/api/v1/contact/list')
             .set('x-authorization', userToken)

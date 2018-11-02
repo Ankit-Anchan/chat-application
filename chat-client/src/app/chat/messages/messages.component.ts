@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {MessagingService} from "../../services/messaging.service";
+import {MessagingService} from '../../services/messaging.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-messages',
@@ -11,87 +12,116 @@ export class MessagesComponent implements OnInit {
   userList: any;
   friendListFound: boolean;
   isSearchResultLoading: boolean;
+  searchValue: string;
 
-  constructor(private messageService: MessagingService) {
+  constructor(private messageService: MessagingService, private snackBar: MatSnackBar) {
     this.isSearchResultLoading = false;
-    this.userList = [
-      {
-        'mobile_number': '0000000000',
-        'firstname': 'Shiba',
-        'lastname': 'Inu'
-      },
-      {
-        'mobile_number': '0000000000',
-        'firstname': 'Shiba',
-        'lastname': 'Inu'
-      },
-      {
-        'mobile_number': '0000000000',
-        'firstname': 'Shiba',
-        'lastname': 'Inu'
-      },
-      {
-        'mobile_number': '0000000000',
-        'firstname': 'Shiba',
-        'lastname': 'Inu'
-      },
-      {
-        'mobile_number': '0000000000',
-        'firstname': 'Shiba',
-        'lastname': 'Inu'
-      },
-      {
-        'mobile_number': '0000000000',
-        'firstname': 'Shiba',
-        'lastname': 'Inu'
-      },
-      {
-        'mobile_number': '0000000000',
-        'firstname': 'Shiba',
-        'lastname': 'Inu'
-      },
-      {
-        'mobile_number': '0000000000',
-        'firstname': 'Shiba',
-        'lastname': 'Inu'
-      }
-    ];
-    this.friendListFound = false;
+    this.userList = [];
+    this.friendListFound = true;
   }
 
   ngOnInit() {
+    this.loadFriendList();
   }
 
-  onSearchChange(searchValue: string ) {
+  onSearchChange(value: string ) {
+    this.searchValue = value;
     this.isSearchResultLoading = true;
-    if (searchValue === '') {
+    if (this.searchValue === '') {
       // load friend list again
       this.isSearchResultLoading = true;
-      this.messageService.getFriendList()
-        .subscribe(list => {
-          this.userList = list;
-          this.isSearchResultLoading = false;
-        },
-          _err => {
-            this.friendListFound = false;
-            this.isSearchResultLoading = false;
-          });
+      this.loadFriendList();
     }
-    if (searchValue.length < 3) {
+    if (this.searchValue.length < 3) {
       this.userList = [];
       return false;
     }
-    console.log(searchValue);
+    console.log(this.searchValue);
+    this.loadSearchList(this.searchValue);
+  }
+
+  loadSearchList(searchValue) {
     this.messageService.searchUser(searchValue)
-      .subscribe(_list => {
-        this.userList = _list;
-        this.friendListFound = true;
-        this.isSearchResultLoading = false;
-      },
-err => {
-      this.friendListFound = false;
+    .subscribe(_list => {
+      console.log(_list);
+      this.userList = this.processSearchList(_list);
+      this.friendListFound = true;
       this.isSearchResultLoading = false;
+    },
+  err => {
+    this.friendListFound = false;
+    this.isSearchResultLoading = false;
+  });
+  }
+
+  loadFriendList() {
+    this.messageService.getFriendList()
+    .subscribe(list => {
+      this.userList = this.processFriendList(list);
+      this.friendListFound = true;
+      this.isSearchResultLoading = false;
+    },
+      _err => {
+        this.friendListFound = false;
+        this.isSearchResultLoading = false;
+      });
+  }
+
+  processFriendList(list) {
+    const parsedList = [];
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].sent_to) {
+        parsedList.push({
+          id: list[i].sent_to._id,
+          mobile_number: list[i].sent_to.mobile_number,
+          firstname: list[i].sent_to.firstname,
+          lastname: list[i].sent_to.lastname,
+          status: list[i].status
+        });
+      } else {
+        parsedList.push({
+          id: list[i].sent_by._id,
+          mobile_number: list[i].sent_by.mobile_number,
+          firstname: list[i].sent_by.firstname,
+          lastname: list[i].sent_by.lastname,
+          status: list[i].status
+        });
+      }
+    }
+    console.log(parsedList);
+    return parsedList;
+  }
+
+  processSearchList(list) {
+    const parsedList = [];
+    for (let i = 0; i < list.length; i++) {
+      const data = {
+        id: list[i]._id,
+        mobile_number: list[i].mobile_number,
+        firstname: list[i].firstname,
+        lastname: list[i].lastname
+      };
+      if (list[i].contact_list && list[i].contact_list.length > 0) {
+          data['status'] = list[i].contact_list[0].status;
+      }
+      parsedList.push(data);
+    }
+    console.log(parsedList);
+    return parsedList;
+  }
+
+  sendFriendRequest(_id: string) {
+    this.messageService.sendFriendRequest(_id).subscribe(res => {
+        console.log(res);
+        this.loadSearchList(this.searchValue);
+        this.displaySnackBar('Request Sent', 'OK');
+    },
+    err => {
+        alert('Something went wrong while sending request');
     });
   }
 
+  displaySnackBar(msg: string, action: string) {
+    this.snackBar.open(msg, action, {duration: 2000});
+  }
 }

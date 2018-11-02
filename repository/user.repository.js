@@ -77,6 +77,7 @@ UserRepository.searchUser = (searchString, id) => {
                 })
         .lean()
         .exec((err, list) => {
+            console.log(list)
                 if(err) {
                     deferred.reject(err);
                 }

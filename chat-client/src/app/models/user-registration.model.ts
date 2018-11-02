@@ -6,5 +6,5 @@ export class UserRegistration {
     public password: string,
     public created_at?: Date,
     public modified_at?: Date
-  ) {};
+  ) {}
 }
