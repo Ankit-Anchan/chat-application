@@ -7,7 +7,31 @@ const ContactService = {};
 
 ContactService.addContactRequest = (contact) => {
     contact.status = util.status.PENDING;
-    return ContactRepo.addContactRequest(contact);
+    let deferred = q.defer();
+    return ContactRepo.addContactRequest(contact)
+        .then(contact => {
+            UserRepo.findById(contact.sent_by)
+                       .then(user => {
+                           user.contact_list.push(contact._id);
+                           UserRepo.update(user._id, user);
+                       })
+                       .catch(err => {
+                           deferred.reject(err);
+                       });
+                   UserRepo.findById(contact.sent_to)
+                       .then(user => {
+                           user.contact_list.push(contact._id);
+                           UserRepo.update(user._id, user);
+                           deferred.resolve(contact);
+                       })
+                       .catch(err => {
+                           deferred.reject(err);
+                       });
+        })
+        .catch(err => {
+            deferred.reject(err);
+        });
+        return deferred.promise;
 };
 
 ContactService.getPendingList = (id) => {
@@ -18,36 +42,15 @@ ContactService.acceptContactRequest = (id) => {
     let deferred = q.defer();
     ContactRepo.findById(id)
         .then(contact => {
+            console.log(contact);
             contact.status = util.status.ACCEPTED;
-            ContactRepo.updateContactRequest(contact._id, contact)
-                .then(_contact => {
-                   UserRepo.findById(contact.sent_by)
-                       .then(user => {
-                           console.log(contact.sent_by);
-                           console.log("user 1 ");
-                           console.log(user);
-                           user.contact_list.push(contact._id);
-                           UserRepo.update(user._id, user);
-                       })
-                       .catch(err => {
-                           deferred.reject(err);
-                       });
-                   UserRepo.findById(contact.sent_to)
-                       .then(user => {
-                           console.log(contact.sent_to);
-                           console.log("user 2");
-                           console.log(user);
-                           user.contact_list.push(contact._id);
-                           UserRepo.update(user._id, user);
-                           deferred.resolve(contact);
-                       })
-                       .catch(err => {
-                           deferred.reject(err);
-                       });
-                })
-                .catch(err => {
-                    deferred.reject(err);
-                });
+            ContactRepo.updateContactRequest(id, contact)
+            .then(contact => {
+                deferred.resolve();
+            })
+            .catch(err => {
+                deferred.reject(err);
+            });
         })
         .catch(err => {
             deferred.reject(err);

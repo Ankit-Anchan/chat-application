@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatHomeComponent } from './chat-home/chat-home.component';
-import {RouterModule, Routes} from "@angular/router";
-import {SharedModule} from "../shared/shared.module";
-import {FormsModule} from "@angular/forms";
+import {RouterModule, Routes} from '@angular/router';
+import {SharedModule} from '../shared/shared.module';
+import {FormsModule} from '@angular/forms';
 import { ChatSearchComponent } from './chat-search/chat-search.component';
 import { MessagesComponent } from './messages/messages.component';
 import { MessageViewComponent } from './message-view/message-view.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [ {
   path: '',
@@ -17,7 +18,10 @@ const routes: Routes = [ {
   },
     {
       path: 'search', component: ChatSearchComponent
-    }]
+    },
+  {
+    path: 'profile', component: ProfileComponent
+  }]
 }];
 
 @NgModule({
@@ -27,6 +31,6 @@ const routes: Routes = [ {
     FormsModule,
     SharedModule
   ],
-  declarations: [ChatHomeComponent, ChatSearchComponent, MessagesComponent, MessageViewComponent]
+  declarations: [ChatHomeComponent, ChatSearchComponent, MessagesComponent, MessageViewComponent, ProfileComponent]
 })
 export class ChatModule { }

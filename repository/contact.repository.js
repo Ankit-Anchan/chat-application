@@ -8,10 +8,10 @@ const ContactRepo = {};
 
 ContactRepo.addContactRequest = (contact) => {
     let deferred = q.defer();
-    contact.save((err) => {
+    contact.save((err, contact) => {
         if(err)
             deferred.reject(err);
-        deferred.resolve();
+        deferred.resolve(contact);
     });
     return deferred.promise;
 };

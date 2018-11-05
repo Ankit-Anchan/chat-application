@@ -1,0 +1,90 @@
+<div>
+  <div *ngIf="isProfileDataLoading">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div class="row" *ngIf="!isProfileDataLoading">
+    <div class="col-md-2"></div>
+    <div class="col-md-8" style="padding: 10px">
+        <mat-card>
+            <mat-card-header>
+              <div mat-card-avatar class="example-header-image"></div>
+              <mat-card-title style="font-size:30px;">{{ mobileNumber }}</mat-card-title>
+              <mat-card-subtitle style="font-size:20px;"> {{ firstname }} {{ lastname }}</mat-card-subtitle>
+            </mat-card-header>
+        </mat-card>
+  </div>
+  <div class="col-md-2"></div>
+</div>
+<div class="row">
+    <div class="col-md-2"></div>
+  <div class="col-md-8">
+    <mat-tab-group>
+        <mat-tab label="Edit Profile">
+          <ng-template matTabContent>
+              <div class="row" style="margin-top:5%">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <mat-card>
+                        <form>
+                            <table cellspacing="0" style="width:100%">
+                              <tr>
+                                <td>
+                                  <mat-form-field class="full-width">
+                                    <input type="text"  matInput name="firstname" id="firstname" [(ngModel)]="firstname" placeholder="First Name"required/>
+                                  </mat-form-field>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <mat-form-field class="full-width">
+                                    <input type="text"  matInput name="lastname" id="lastname" [(ngModel)]="lastname" placeholder="Last Name"required/>
+                                  </mat-form-field>
+                                </td>
+                              </tr>
+                            </table>
+                          </form>
+                          <p>
+                            <button mat-raised-button class="full-width" color="primary" (click)="editProfile()">EDIT</button>
+                          </p>
+                    </mat-card>
+                </div>
+                <div class="col-md-2"></div>
+              </div>
+          </ng-template>
+        </mat-tab>    
+        <mat-tab label="Pending Requests">
+            <ng-template matTabContent>
+                <div *ngIf="isPendingRequestDataLoading" style="text-align: center; margin-top: 20%">
+                    <mat-spinner diameter="50" style="margin: auto"></mat-spinner>
+                </div>
+                <div *ngIf="!pendingList" style="text-align: center; margin-top: 10%"> No Pending Requests </div>
+                <div *ngIf="!isPendingRequestDataLoading">
+                    <mat-card *ngFor="let request of pendingList">
+                        <mat-card-header>
+                          <div mat-card-avatar class="example-header-image"></div>
+                          <mat-card-title style="font-size:20px;">{{ request.mobile_number }}</mat-card-title>
+                          <mat-card-subtitle style="font-size:15px;"> {{ request.firstname }} {{ request.lastname }}</mat-card-subtitle>
+                        </mat-card-header>
+                        <div style="text-align: center">
+                          <mat-card-actions style="margin-bottom: 0px">
+                              <button mat-button (click)="acceptFriendRequest(request.request_id)">ACCEPT</button>
+                              <button mat-button (click)="declineFriendRequest(request.request_id)">DECLINE</button>
+                          </mat-card-actions>
+                        </div>
+                        <mat-hint> {{ request.created_at | date: 'dd/MM/yyyy HH:MM' }} </mat-hint>
+                    </mat-card>
+                </div>
+            </ng-template>
+        </mat-tab> 
+        <mat-tab label="Log Out">
+          <ng-template matTabContent>
+            <div style="text-align: center; margin-top: 5%">
+            <button mat-button (click)="logout()">LOG OUT</button>
+          </div>
+          </ng-template>
+        </mat-tab> 
+      </mat-tab-group>
+    </div>
+    <div class="col-md-2"></div>
+</div>
+</div>

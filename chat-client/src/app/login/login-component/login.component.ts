@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {Token} from "../../models/token.model";
-import {UserLoginService} from "../../services/user-login.service";
-import {UserLogin} from "../../models/user-login.model";
-import {CustomCookieService} from "../../services/custom-cookie.service";
-import {Router} from "@angular/router";
+import {Token} from '../../models/token.model';
+import {UserLoginService} from '../../services/user-login.service';
+import {UserLogin} from '../../models/user-login.model';
+import {CustomCookieService} from '../../services/custom-cookie.service';
+import {Router} from '@angular/router';
 import { MatSnackBar } from '@angular/material';
-import { UserInfoModel } from 'src/app/models/user-info.model';
 
 @Component({
   selector: 'app-login',
@@ -23,6 +22,10 @@ export class LoginComponent implements OnInit {
               private loginService: UserLoginService,
               private cookieService: CustomCookieService,
               private snackBar: MatSnackBar) {
+      const existingToken = this.cookieService.getCookie('token');
+      if (existingToken && existingToken !== '') {
+        this.router.navigate(['/chat', {}]);
+      }
   }
 
   ngOnInit() {
@@ -48,9 +51,7 @@ export class LoginComponent implements OnInit {
         console.log(this.token);
         this.loginService.getUserInfo(this.token.token)
         .subscribe(data => {
-          console.log(data);
           const userInfo = JSON.stringify(data);
-          console.log(userInfo);
           this.cookieService.saveCookie('info', userInfo, 7);
           console.log(this.cookieService.getCookie('info'));
           this.router.navigate(['chat', {}]);

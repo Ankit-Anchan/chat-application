@@ -1,10 +1,11 @@
-import {Injectable} from "@angular/core";
-import {Router} from "@angular/router";
-import {UserLogin} from "../models/user-login.model";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {environment} from "../../environments/environment";
-import {Token} from "../models/token.model";
-import {UserRegistration} from "../models/user-registration.model";
+import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
+import {UserLogin} from '../models/user-login.model';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {environment} from '../../environments/environment';
+import {Token} from '../models/token.model';
+import {UserRegistration} from '../models/user-registration.model';
+import { CustomCookieService } from './custom-cookie.service';
 
 @Injectable()
 export class UserLoginService {
@@ -12,7 +13,7 @@ export class UserLoginService {
   private httpHeader = new HttpHeaders()
     .set('content-type', 'application/json');
 
-  constructor(private router: Router, private http: HttpClient) {
+  constructor(private router: Router, private http: HttpClient, private cookieService: CustomCookieService) {
   }
 
   loginUser(user: UserLogin) {
@@ -30,5 +31,9 @@ export class UserLoginService {
   registerUser(user: UserRegistration) {
     const httpBody = JSON.stringify(user);
     return this.http.post<Token>(environment.server_url + 'api/v1/auth/user/add', httpBody ,{headers: this.httpHeader});
+  }
+
+  logOut() {
+    this.cookieService.removeAllCookie();
   }
 }

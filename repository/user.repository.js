@@ -67,7 +67,7 @@ UserRepository.update = (id, user) => {
 UserRepository.searchUser = (searchString, id) => {
     let deferred = q.defer();
     User.find({'mobile_number': { $regex: searchString + '*.'}})
-        .populate('user', 'mobile_number firstname lastname')
+        .select('mobile_number firstname lastname')
         .populate({
                     path: 'contact_list',
                     select: { _id: 1, status: 1, sent_by: 1, sent_to: 1},

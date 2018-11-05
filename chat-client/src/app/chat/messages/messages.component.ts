@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {MessagingService} from '../../services/messaging.service';
 import { MatSnackBar } from '@angular/material';
+import { CustomCookieService } from '../../services/custom-cookie.service';
 
 @Component({
   selector: 'app-messages',
@@ -13,11 +14,14 @@ export class MessagesComponent implements OnInit {
   friendListFound: boolean;
   isSearchResultLoading: boolean;
   searchValue: string;
+  loggedInUser: string;
 
-  constructor(private messageService: MessagingService, private snackBar: MatSnackBar) {
+  constructor(private messageService: MessagingService, private snackBar: MatSnackBar, private cookieService: CustomCookieService) {
     this.isSearchResultLoading = false;
     this.userList = [];
     this.friendListFound = true;
+    const data = JSON.parse(this.cookieService.getCookie('info'));
+    this.loggedInUser = data.mobile_number;
   }
 
   ngOnInit() {
