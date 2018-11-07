@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {UserLoginService} from "../../services/user-login.service";
-import {UserRegistration} from "../../models/user-registration.model";
-import {CustomCookieService} from "../../services/custom-cookie.service";
-import {Token} from "../../models/token.model";
-import {Router} from "@angular/router";
+import {UserLoginService} from '../../services/user-login.service';
+import {UserRegistration} from '../../models/user-registration.model';
+import {CustomCookieService} from '../../services/custom-cookie.service';
+import {Token} from '../../models/token.model';
+import {Router} from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 
 @Component({
@@ -38,13 +38,24 @@ export class RegistrationComponent implements OnInit {
         this.displaySnackBar(this.errorMessage, 'DISMISS');
       return false;
     }
+
     this.userService.registerUser(this.userRegistration).subscribe((_token) => {
         console.log(_token);
         this.token = _token;
         this.cookieService.saveCookie('token', this.token.token, 7);
-        this.successMessage = 'Registration Successful';
-        this.displaySnackBar(this.successMessage, 'OK');
-        this.router.navigate(['chat', {}]);
+        this.userService.getUserInfo(this.token.token)
+        .subscribe(data => {
+          const userInfo = JSON.stringify(data);
+          this.cookieService.saveCookie('info', userInfo, 7);
+          this.successMessage = 'Registration Successful';
+          this.displaySnackBar(this.successMessage, 'OK');
+          this.router.navigate(['chat', {}]);
+        },
+        err => {
+          this.errorMessage = 'Something went wrong, please Login again!';
+          this.snackBar.open(this.errorMessage, 'OK', { duration: 1000 });
+          this.router.navigate(['login', {}]);
+        });
     },
       _err => {
         if (_err.status === 409) {

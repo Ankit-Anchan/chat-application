@@ -34,6 +34,7 @@ export class UserLoginService {
   }
 
   logOut() {
-    this.cookieService.removeAllCookie();
+    this.cookieService.removeCookie('token');
+    this.cookieService.removeCookie('info');
   }
 }

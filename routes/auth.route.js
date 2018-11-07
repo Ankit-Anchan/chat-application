@@ -10,7 +10,11 @@ router.post('/user/add', (req, res, next) => {
     const user = new User(req.body);
     service.createUser(user)
         .then((_user) => {
-            service.login(user.mobile_number, user.password)
+            console.log(user.mobile_number);
+            console.log(user.password);
+            console.log(req.body.password);
+            console.log(_user);
+            service.login(user.mobile_number, req.body.password)
                 .then((user) => {
                     const token = jwt.sign({ id: user._id,username: user.mobile_number }, config[process.env.NODE_ENV].secret_key, {
                         expiresIn: 604800 // expires in 24 hours
@@ -20,7 +24,6 @@ router.post('/user/add', (req, res, next) => {
                 .catch(err => {
                     return next(new ApplicationError.Unauthorized('Invalid username or password.'));
                 });
-            res.send({message: 'success'});
         })
         .catch((err) => {
             return next(new ApplicationError.InternalServerError(err));

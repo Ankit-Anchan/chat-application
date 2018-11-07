@@ -25,8 +25,9 @@ export class ProfileComponent implements OnInit {
                private router: Router,
                private snackBar: MatSnackBar) {
       const token = this.cookieService.getCookie('token');
-      if (!token || token === '') {
+      if (!token || token === undefined || token === '') {
         this.router.navigate(['/login']);
+        return;
       }
       this.isProfileDataLoading = true;
       const userInfo = JSON.parse(this.cookieService.getCookie('info'));
@@ -45,10 +46,16 @@ export class ProfileComponent implements OnInit {
     this.isPendingRequestDataLoading = true;
     this.contactService.getPendingRequestList()
     .subscribe(data => {
+      console.log('pending list');
+      console.log(data);
         this.pendingList = this.processPendingList(data);
         this.isPendingRequestDataLoading = false;
     },
     err => {
+      console.log(err);
+      if (err.status === 404) {
+        this.pendingList = [];
+      }
       this.isPendingRequestDataLoading = false;
     });
   }
@@ -94,7 +101,8 @@ export class ProfileComponent implements OnInit {
   logout() {
     this.loginService.logOut();
     this.showSnackBar('Log Out Successfull', 'OK');
-    this.router.navigate(['/login']);
+    // this.router.navigate(['/login']);
+    this.ngOnInit();
   }
 
   showSnackBar(msg: string, action: string) {

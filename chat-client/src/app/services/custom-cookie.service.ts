@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {CookieService} from 'ngx-cookie';
+import {CookieService} from 'ngx-cookie-service';
 import * as moment from 'moment';
 
 @Injectable()
@@ -14,11 +14,11 @@ export class CustomCookieService {
 
       const date = moment().add(day, 'days');
 
-      this.cookieService.put(key, JSON.stringify(value), {expires: date.toDate()});
+      this.cookieService.set(key, JSON.stringify(value), date.toDate(), '/');
 
     } else {
 
-      this.cookieService.put(key, JSON.stringify(value));
+      this.cookieService.set(key, JSON.stringify(value), 7, '/');
 
     }
 
@@ -26,7 +26,7 @@ export class CustomCookieService {
 
   getCookie(key) {
     const val = this.cookieService.get(key);
-    if (val === '' || val === undefined) {
+    if (val === '' || !val) {
       return '';
     } else {
       return JSON.parse(this.cookieService.get(key));
@@ -34,11 +34,11 @@ export class CustomCookieService {
   }
 
   removeCookie(key) {
-    this.cookieService.remove(key);
+    this.cookieService.delete(key, '/');
   }
 
   removeAllCookie() {
-    this.cookieService.removeAll();
+    this.cookieService.deleteAll('/');
   }
 
 }

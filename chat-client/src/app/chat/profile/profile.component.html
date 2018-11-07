@@ -57,7 +57,7 @@
                 <div *ngIf="isPendingRequestDataLoading" style="text-align: center; margin-top: 20%">
                     <mat-spinner diameter="50" style="margin: auto"></mat-spinner>
                 </div>
-                <div *ngIf="!pendingList" style="text-align: center; margin-top: 10%"> No Pending Requests </div>
+                <div *ngIf="!pendingList || pendingList.length === 0" style="text-align: center; margin-top: 10%"> No Pending Requests </div>
                 <div *ngIf="!isPendingRequestDataLoading">
                     <mat-card *ngFor="let request of pendingList">
                         <mat-card-header>
