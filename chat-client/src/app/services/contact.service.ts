@@ -3,12 +3,19 @@ import { CustomCookieService } from './custom-cookie.service';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import * as io from 'socket.io-client';
+import { DataSharingService } from './data-sharing.service';
+import { SocketService } from './socket.service';
 
 @Injectable()
 export class ContactService {
     token: string;
+    socket: SocketIOClient.Socket;
 
-    constructor(private http: HttpClient, private cookieService: CustomCookieService, private router: Router) {
+    constructor(private http: HttpClient,
+                private cookieService: CustomCookieService,
+                private router: Router,
+                private dataService: DataSharingService) {
         this.token = this.cookieService.getCookie('token');
         if (!this.token || this.token === '') {
             this.router.navigate(['/login', {}]);

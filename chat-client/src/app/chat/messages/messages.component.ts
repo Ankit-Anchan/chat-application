@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {MessagingService} from '../../services/messaging.service';
 import { MatSnackBar } from '@angular/material';
 import { CustomCookieService } from '../../services/custom-cookie.service';
+import {SocketService} from '../../services/socket.service';
+import { DataSharingService } from 'src/app/services/data-sharing.service';
 
 @Component({
   selector: 'app-messages',
@@ -16,12 +18,21 @@ export class MessagesComponent implements OnInit {
   searchValue: string;
   loggedInUser: string;
 
-  constructor(private messageService: MessagingService, private snackBar: MatSnackBar, private cookieService: CustomCookieService) {
+  constructor(private messageService: MessagingService,
+              private snackBar: MatSnackBar,
+              private cookieService: CustomCookieService,
+              private socketService: SocketService,
+              private dataSharingService: DataSharingService) {
     this.isSearchResultLoading = false;
     this.userList = [];
     this.friendListFound = true;
     const data = JSON.parse(this.cookieService.getCookie('info'));
+    this.socketService.initSocket();
     this.loggedInUser = data.mobile_number;
+    this.dataSharingService.newRequestAccept.subscribe(_data => {
+        this.displaySnackBar(_data.message, 'OK');
+        this.loadFriendList();
+      });
   }
 
   ngOnInit() {
@@ -92,7 +103,6 @@ export class MessagesComponent implements OnInit {
         });
       }
     }
-    console.log(parsedList);
     return parsedList;
   }
 
@@ -110,7 +120,6 @@ export class MessagesComponent implements OnInit {
       }
       parsedList.push(data);
     }
-    console.log(parsedList);
     return parsedList;
   }
 
@@ -126,6 +135,6 @@ export class MessagesComponent implements OnInit {
   }
 
   displaySnackBar(msg: string, action: string) {
-    this.snackBar.open(msg, action, {duration: 2000});
+    this.dataSharingService.showSnackBar.next({message: msg, action: action});
   }
 }

@@ -4,6 +4,8 @@ import { ContactService } from 'src/app/services/contact.service';
 import { MatSnackBar } from '@angular/material';
 import { UserLoginService } from 'src/app/services/user-login.service';
 import { Router } from '@angular/router';
+import { DataSharingService } from '../../services/data-sharing.service';
+import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
   selector: 'app-profile',
@@ -18,12 +20,15 @@ export class ProfileComponent implements OnInit {
   isProfileDataLoading: boolean;
   isPendingRequestDataLoading: boolean;
   pendingList: any[];
+  socket: SocketIOClient.Socket;
 
   constructor (private cookieService: CustomCookieService,
                private loginService: UserLoginService,
                private contactService: ContactService,
                private router: Router,
-               private snackBar: MatSnackBar) {
+               private snackBar: MatSnackBar,
+               private dataSharingService: DataSharingService,
+               private socketService: SocketService) {
       const token = this.cookieService.getCookie('token');
       if (!token || token === undefined || token === '') {
         this.router.navigate(['/login']);
@@ -36,6 +41,16 @@ export class ProfileComponent implements OnInit {
       this.mobileNumber = userInfo.mobile_number;
       this._id = userInfo._id;
       this.isProfileDataLoading = false;
+      this.socket = this.socketService.getSocket();
+      console.log(this.socket);
+      this.dataSharingService.newFriendRequest.subscribe(data => {
+        this.showSnackBar(data.message, 'OK');
+        this.loadPendingRequest();
+      });
+      this.dataSharingService.newRequestAccept.subscribe(data => {
+        this.showSnackBar(data.message, 'OK');
+        this.loadPendingRequest();
+      });
   }
 
   ngOnInit() {
@@ -46,7 +61,6 @@ export class ProfileComponent implements OnInit {
     this.isPendingRequestDataLoading = true;
     this.contactService.getPendingRequestList()
     .subscribe(data => {
-      console.log('pending list');
       console.log(data);
         this.pendingList = this.processPendingList(data);
         this.isPendingRequestDataLoading = false;
@@ -101,12 +115,12 @@ export class ProfileComponent implements OnInit {
   logout() {
     this.loginService.logOut();
     this.showSnackBar('Log Out Successfull', 'OK');
-    // this.router.navigate(['/login']);
-    this.ngOnInit();
+    this.router.navigate(['/login']);
+    return;
   }
 
   showSnackBar(msg: string, action: string) {
-      this.snackBar.open(msg, action, {duration: 2000});
+      this.dataSharingService.showSnackBar.next({message: msg, action: action});
   }
 
 }

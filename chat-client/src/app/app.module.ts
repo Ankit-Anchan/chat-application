@@ -13,6 +13,8 @@ import {HttpClientModule} from '@angular/common/http';
 import {MessagingService} from './services/messaging.service';
 import { HomeComponent } from './home/home.component';
 import { ContactService } from './services/contact.service';
+import { DataSharingService } from './services/data-sharing.service';
+import { SocketService } from './services/socket.service';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,7 @@ import { ContactService } from './services/contact.service';
     HttpClientModule,
     AppRoutingModule
   ],
-  providers: [UserLoginService, CookieService, CustomCookieService, MessagingService, ContactService],
+  providers: [SocketService, UserLoginService, CookieService, CustomCookieService, MessagingService, ContactService, DataSharingService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

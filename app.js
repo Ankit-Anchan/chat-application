@@ -52,5 +52,6 @@ app.use(ErrorHandler);
 var server = app.listen(port);
 console.log('Server started on port: ' + port);
 
-module.exports = server;
+var io = require('socket.io').listen(server);
 
+require('./socket').init(io);

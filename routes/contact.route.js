@@ -60,11 +60,9 @@ router.get('/list', (req, res, next) => {
     console.log('req.id');
     contactService.getContactList(req.id)
         .then(list => {
-            console.log(list);
             if(list.length === 0) {
                 return next(new ApplicationError.NotFound('No Contacts Yet'));
             }
-            console.log('sending response');
             res.status(200).send(list);
         })
         .catch(err => {
