@@ -1,4 +1,3 @@
-const socket = require('../socket');
 let userSocketRepository = require('../repository/user-socket.repository');
 
 const contactSocketService = {};

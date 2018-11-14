@@ -35,6 +35,18 @@ export class SocketService {
                 console.log('accept request socket service invoked');
                 this.dataSharingService.newRequestAccept.next(_data);
             });
+
+            this.socket.on('downstream_message', (_data) => {
+                console.log('downstream message socket service invoked');
+                console.log(_data);
+                this.dataSharingService.newMessage.next(_data);
+            });
+
+            this.dataSharingService.sendMessage.subscribe(_data => {
+                console.log('emitting a new message');
+                console.log(_data);
+                this.socket.emit('upstream_message', _data);
+            });
         });
     }
 

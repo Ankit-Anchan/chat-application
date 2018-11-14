@@ -1,15 +1,64 @@
 <div>
-  <div>
-    <mat-card style="height:2%; padding-bottom:0px;" class="full-width">
-      <mat-card-header style="height:auto;">
-          <div mat-card-avatar class="example-header-image"></div>
-          <mat-card-title style="font-size: 20px">1234567890</mat-card-title>
-          <mat-card-subtitle style="font-size: 15px">Ankit Anchan</mat-card-subtitle>
-      </mat-card-header>
-    </mat-card>
+  <div *ngIf="activeChat.mobile_number === '' && activeChat.fullname === ''">
+    <h3>
+      Select a user from the left to initiate a conversation
+    </h3>
   </div>
-  <div>
-    <div *ngFor="let msg of msgList">
-      
+  <div *ngIf="activeChat.mobile_number !== '' && activeChat.fullname !== ''">
+    <div>
+      <mat-card style="height:2%; padding-bottom:0px;" class="full-width">
+        <mat-card-header style="height:auto;">
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title style="font-size: 20px">{{ activeChat.mobile_number }}</mat-card-title>
+          <mat-card-subtitle style="font-size: 15px"> {{ activeChat.fullname }} </mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
     </div>
+    <div>
+      <div *ngIf="msgList">
+        <div *ngFor="let msg of msgList">
+          <div *ngIf="msg.sent_by_username==loggedInUser" style="text-align: right">
+            <mat-card>
+              <mat-card-content>
+                <div class="row">
+                  <p class="col-md-8"> {{msg.message}} </p>
+                  <p class="col-md-4"> {{ msg.created_at | date: 'dd/MM/yyyy HH:MM' }} </p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+          <div *ngIf="msg.sent_by_username!=loggedInUser" style="text-align: left">
+            <mat-card>
+              <mat-card-content>
+                <div class="row">
+                  <p class="col-md-8"> {{msg.message}} </p>
+                  <p class="col-md-4"> {{ msg.created_at | date: 'dd/MM/yyyy HH:MM' }} </p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!isFetchingMessages">
+        <div *ngIf="!msgList || msgList.length === 0" style="text-align: center; margin-top: 20%">
+          <h3>No Messages Found!</h3>
+        </div>
+      </div>
+      <div *ngIf="isFetchingMessages" style="text-align: center; margin-top: 20%">
+        <mat-spinner diameter="50" style="margin:auto;"></mat-spinner>
+      </div>
+      <div style="position: fixed; width: 100%; bottom:0" class="col-md-8">
+        <div class="row">
+          <div class="col-md-10 col-10">
+            <mat-form-field class="full-width" style="background: #FFF;">
+              <input matInput [(ngModel)]="message" placeholder="send message" />
+            </mat-form-field>
+          </div>
+          <div class="col-md-2 col-2">
+            <button mat-raised-button color="primary" (click)="sendMessage()">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

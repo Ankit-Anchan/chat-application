@@ -40,6 +40,9 @@ userSocketRepo.deleteSocket = (socketId) => {
 };
 
 userSocketRepo.getSocketByUsername = (username) => {
+    if(!userSocketRepo.userSockets[username]) {
+        return [];
+    }
     return userSocketRepo.userSockets[username];
 }
 

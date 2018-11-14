@@ -56,7 +56,7 @@ ContactRepo.updateContactRequest  = (id, contact) => {
 
 ContactRepo.getContactList = (id) => {
     let deferred = q.defer();
-    const subDocumentProjection = 'firstname lastname mobile_number';
+    const subDocumentProjection = '_id firstname lastname mobile_number';
     Contact.find({$or: [{sent_to: id}, {sent_by: id}]})
         .and({status: util.status.ACCEPTED})
         .select('sent_to sent_by status')
@@ -67,6 +67,8 @@ ContactRepo.getContactList = (id) => {
             if(err) {
                 deferred.reject(err);
             }
+            console.log('list = ');
+            console.log(list);
             deferred.resolve(list);
         });
     return deferred.promise;

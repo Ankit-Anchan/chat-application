@@ -8,4 +8,7 @@ export class DataSharingService {
     public newRequestAccept = new Subject<any>();
     public newRequestDecline = new Subject<any>();
     public showSnackBar = new Subject<any>();
+    public activeChat = new Subject<any>();
+    public newMessage = new Subject<any>();
+    public sendMessage = new Subject<any>();
 }

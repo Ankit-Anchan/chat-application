@@ -16,6 +16,7 @@ const verifyToken = require('./common/token.verify');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users.route');
 const contactRouter = require('./routes/contact.route');
+const messageRouter = require('./routes/message.route');
 const authRouter = require('./routes/auth.route');
 
 var app = express();
@@ -32,6 +33,7 @@ app.use('/api/v1/', indexRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/user', verifyToken, usersRouter);
 app.use('/api/v1/contact', verifyToken, contactRouter);
+app.use('/api/v1/message', verifyToken, messageRouter);
 
 app.use('*', (req, res, next) => {
     const error = new ApplicationError.NotFound('Not Found');

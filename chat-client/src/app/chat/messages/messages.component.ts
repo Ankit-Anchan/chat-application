@@ -17,6 +17,7 @@ export class MessagesComponent implements OnInit {
   isSearchResultLoading: boolean;
   searchValue: string;
   loggedInUser: string;
+  activeChat: any;
 
   constructor(private messageService: MessagingService,
               private snackBar: MatSnackBar,
@@ -33,6 +34,11 @@ export class MessagesComponent implements OnInit {
         this.displaySnackBar(_data.message, 'OK');
         this.loadFriendList();
       });
+    this.activeChat = {mobile_number: '', fullname: ''};
+    this.dataSharingService.activeChat.subscribe(_data => {
+      this.activeChat.mobile_number = _data.mobile_number;
+      this.activeChat.fullname = _data.fullname;
+    });
   }
 
   ngOnInit() {
@@ -132,6 +138,10 @@ export class MessagesComponent implements OnInit {
     err => {
         alert('Something went wrong while sending request');
     });
+  }
+
+  setActiveChat(mobileNumber: string, fullName: string, id: string) {
+    this.dataSharingService.activeChat.next({mobile_number: mobileNumber, fullname: fullName, _id: id});
   }
 
   displaySnackBar(msg: string, action: string) {

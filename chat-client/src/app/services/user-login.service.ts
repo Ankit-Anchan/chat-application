@@ -30,11 +30,12 @@ export class UserLoginService {
 
   registerUser(user: UserRegistration) {
     const httpBody = JSON.stringify(user);
-    return this.http.post<Token>(environment.server_url + 'api/v1/auth/user/add', httpBody ,{headers: this.httpHeader});
+    return this.http.post<Token>(environment.server_url + 'api/v1/auth/user/add', httpBody, {headers: this.httpHeader});
   }
 
   logOut() {
     this.cookieService.removeCookie('token');
     this.cookieService.removeCookie('info');
+    this.cookieService.removeCookie('active_chat');
   }
 }

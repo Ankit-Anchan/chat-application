@@ -45,4 +45,11 @@ export class MessagingService {
       console.log('token = ' + this.token);
     return this.http.post(environment.server_url + 'api/v1/contact/request/send', httpBody, {headers: header});
   }
+
+  getMessageList(sent_to: string) {
+    const header = new HttpHeaders()
+      .set('content-type', 'application/json')
+      .set('x-authorization', this.token);
+      return this.http.get(environment.server_url + 'api/v1/message/list/' + sent_to,{headers: header});
+  }
 }

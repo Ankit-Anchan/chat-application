@@ -1,5 +1,6 @@
 // const userSockets = {};
-let socketRepository = require('./repository/user-socket.repository');
+const socketRepository = require('./repository/user-socket.repository');
+const messageSocket = require('./service/message-socket.service');
 
 let socket = {};
 
@@ -31,6 +32,9 @@ socket.events = () => {
             console.log('socket disconnected ' + socket.id);
             socketRepository.deleteSocket(socket.id);
         });
+        
+        messageSocket.init(socket);
+
     });
 }
 

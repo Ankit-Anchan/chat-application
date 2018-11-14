@@ -6,7 +6,7 @@ const User = require('../model/user.model');
 
 UserRepository.createUser = (user) => {
     var deferred = q.defer();
-    user.save(function(err, _user) {
+    user.save((err, _user) => {
         if(err) {
             deferred.reject(err);
         }
@@ -19,7 +19,7 @@ UserRepository.getUserByMobileNumber = (mobileNumber) => {
     var deferred = q.defer();
     User.findOne({mobile_number: mobileNumber})
         .lean()
-        .exec(function(err, user) {
+        .exec((err, user) => {
             if(!user) {
                 deferred.reject(err);
             }
@@ -32,7 +32,7 @@ UserRepository.getAllUsers = () => {
     var deferred = q.defer();
     User.find({}, null, {})
         .lean()
-        .exec(function(err, users) {
+        .exec((err, users) => {
             if(err) {
                 deferred.reject(err);
             }
@@ -66,7 +66,7 @@ UserRepository.update = (id, user) => {
 
 UserRepository.searchUser = (searchString, id) => {
     let deferred = q.defer();
-    User.find({'mobile_number': { $regex: searchString + '*.'}})
+    User.find({$or: [{'mobile_number': { $regex: searchString + '*.'}}]})
         .select('mobile_number firstname lastname')
         .populate({
                     path: 'contact_list',
