@@ -11,4 +11,5 @@ export class DataSharingService {
     public activeChat = new Subject<any>();
     public newMessage = new Subject<any>();
     public sendMessage = new Subject<any>();
+    public logOut = new Subject<any>();
 }

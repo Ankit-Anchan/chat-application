@@ -6,6 +6,7 @@ import {environment} from '../../environments/environment';
 import {Token} from '../models/token.model';
 import {UserRegistration} from '../models/user-registration.model';
 import { CustomCookieService } from './custom-cookie.service';
+import {DataSharingService} from './data-sharing.service';
 
 @Injectable()
 export class UserLoginService {
@@ -13,7 +14,9 @@ export class UserLoginService {
   private httpHeader = new HttpHeaders()
     .set('content-type', 'application/json');
 
-  constructor(private router: Router, private http: HttpClient, private cookieService: CustomCookieService) {
+  constructor(private http: HttpClient,
+              private cookieService: CustomCookieService,
+              private dataSharingService: DataSharingService) {
   }
 
   loginUser(user: UserLogin) {
@@ -34,6 +37,7 @@ export class UserLoginService {
   }
 
   logOut() {
+    this.dataSharingService.logOut.next({});
     this.cookieService.removeCookie('token');
     this.cookieService.removeCookie('info');
     this.cookieService.removeCookie('active_chat');

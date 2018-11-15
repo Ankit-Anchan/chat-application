@@ -67,8 +67,6 @@ ContactRepo.getContactList = (id) => {
             if(err) {
                 deferred.reject(err);
             }
-            console.log('list = ');
-            console.log(list);
             deferred.resolve(list);
         });
     return deferred.promise;

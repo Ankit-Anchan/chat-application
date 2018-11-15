@@ -9,8 +9,13 @@ userSocketRepo.addNewSocket = (socketId, socket, data) => {
             socket_id: socketId,
             socket: socket
         }
-        socketObj.push(obj);
-        userSocketRepo.userSockets[data.sent_by] = socketObj;
+        let checkIfSocketExistsArray = socketObj.filter((val, index, arr) => {
+            return val.socket_id === socketId;
+        })
+        if(!checkIfSocketExistsArray || checkIfSocketExistsArray.length === 0) {
+            socketObj.push(obj);
+            userSocketRepo.userSockets[data.sent_by] = socketObj;
+        }
     }
     else {
         let arr = [];

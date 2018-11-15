@@ -26,9 +26,7 @@ export class ProfileComponent implements OnInit {
                private loginService: UserLoginService,
                private contactService: ContactService,
                private router: Router,
-               private snackBar: MatSnackBar,
-               private dataSharingService: DataSharingService,
-               private socketService: SocketService) {
+               private dataSharingService: DataSharingService) {
       const token = this.cookieService.getCookie('token');
       if (!token || token === undefined || token === '') {
         this.router.navigate(['/login']);
@@ -41,8 +39,6 @@ export class ProfileComponent implements OnInit {
       this.mobileNumber = userInfo.mobile_number;
       this._id = userInfo._id;
       this.isProfileDataLoading = false;
-      this.socket = this.socketService.getSocket();
-      console.log(this.socket);
       this.dataSharingService.newFriendRequest.subscribe(data => {
         this.showSnackBar(data.message, 'OK');
         this.loadPendingRequest();

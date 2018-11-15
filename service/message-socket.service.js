@@ -18,11 +18,11 @@ MessageSocketService.events = () => {
         let senderSocketList = userSocketRepository.getSocketByUsername(data.sent_by_username);
         let receiverSocketList = userSocketRepository.getSocketByUsername(data.sent_to_username);
         for(let i = 0; i < senderSocketList.length; i++) {
-            console.log('emitting downstream message to sender');
+            console.log(i + 'emitting downstream message to sender ' + senderSocketList[i].socket_id);
             senderSocketList[i].socket.emit('downstream_message', data);
         }
         for(let i = 0; i < receiverSocketList.length; i++) {
-            console.log('emitting downstream message to receiver');
+            console.log(i + 'emitting downstream message to receiver' + receiverSocketList[i].socket_id);
             receiverSocketList[i].socket.emit('downstream_message', data);
         }        
         messageService.addMessage(data)

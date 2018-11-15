@@ -38,15 +38,24 @@ export class SocketService {
 
             this.socket.on('downstream_message', (_data) => {
                 console.log('downstream message socket service invoked');
-                console.log(_data);
+                console.log('socket id = ' + this.socket.id);
                 this.dataSharingService.newMessage.next(_data);
             });
 
-            this.dataSharingService.sendMessage.subscribe(_data => {
-                console.log('emitting a new message');
-                console.log(_data);
-                this.socket.emit('upstream_message', _data);
+            this.socket.on('disconnect', () => {
+                console.log('socket disconnected');
+                // this.socket.removeAllListeners();
             });
+        });
+
+        this.dataSharingService.sendMessage.subscribe(_data => {
+            console.log('socket id = ' + this.socket.id);
+            console.log('emitting a new message');
+            console.log(_data);
+            this.socket.emit('upstream_message', _data);
+        });
+        this.dataSharingService.logOut.subscribe(_data => {
+            this.socket.emit('log_out', _data);
         });
     }
 
@@ -55,11 +64,5 @@ export class SocketService {
            return this.socket;
         }
         return null;
-    }
-
-    onDisconnect() {
-        this.socket.on('disconnect', () => {
-            console.log('socket disconnected');
-        });
     }
 }

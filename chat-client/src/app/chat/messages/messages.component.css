@@ -7,3 +7,14 @@
 .full-width {
   width: 100%;
 }
+
+.card-press {
+  background: #ececec;
+  border-top: 2px solid #d3d3d3;
+  border-bottom: 1px solid #d6d6d6
+}
+
+.card-not-pressed { 
+  border-top: 2px solid white;
+  border-bottom: 1px solid white;
+}

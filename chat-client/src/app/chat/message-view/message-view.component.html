@@ -1,8 +1,10 @@
 <div>
   <div *ngIf="activeChat.mobile_number === '' && activeChat.fullname === ''">
+    <div >
     <h3>
       Select a user from the left to initiate a conversation
     </h3>
+  </div>
   </div>
   <div *ngIf="activeChat.mobile_number !== '' && activeChat.fullname !== ''">
     <div>
@@ -10,7 +12,7 @@
         <mat-card-header style="height:auto;">
           <div mat-card-avatar class="example-header-image"></div>
           <mat-card-title style="font-size: 20px">{{ activeChat.mobile_number }}</mat-card-title>
-          <mat-card-subtitle style="font-size: 15px"> {{ activeChat.fullname }} </mat-card-subtitle>
+          <mat-card-subtitle style="font-size: 15px"> {{ activeChat.fullname }} {{ message }}</mat-card-subtitle>
         </mat-card-header>
       </mat-card>
     </div>
@@ -48,16 +50,18 @@
         <mat-spinner diameter="50" style="margin:auto;"></mat-spinner>
       </div>
       <div style="position: fixed; width: 100%; bottom:0" class="col-md-8">
+        <form>
         <div class="row">
           <div class="col-md-10 col-10">
             <mat-form-field class="full-width" style="background: #FFF;">
-              <input matInput [(ngModel)]="message" placeholder="send message" />
+              <input matInput [(ngModel)]="message" name="message" placeholder="send message" />
             </mat-form-field>
           </div>
           <div class="col-md-2 col-2">
             <button mat-raised-button color="primary" (click)="sendMessage()">Send</button>
           </div>
         </div>
+      </form>
       </div>
     </div>
   </div>

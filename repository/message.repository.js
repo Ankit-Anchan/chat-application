@@ -25,7 +25,7 @@ MessageRepository.getMessages = (sent_by, sent_to) => {
         limit: 10
     })
     .and({$or: [{sent_to_user: sent_by}, {sent_to_user: sent_to}]})
-    .sort({created_at: -1})
+    .sort({created_at: 1})
     .lean()
     .exec((err, messageList) => {
         if(err) {

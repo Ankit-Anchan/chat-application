@@ -20,15 +20,12 @@ export class MessagesComponent implements OnInit {
   activeChat: any;
 
   constructor(private messageService: MessagingService,
-              private snackBar: MatSnackBar,
               private cookieService: CustomCookieService,
-              private socketService: SocketService,
               private dataSharingService: DataSharingService) {
     this.isSearchResultLoading = false;
     this.userList = [];
     this.friendListFound = true;
     const data = JSON.parse(this.cookieService.getCookie('info'));
-    this.socketService.initSocket();
     this.loggedInUser = data.mobile_number;
     this.dataSharingService.newRequestAccept.subscribe(_data => {
         this.displaySnackBar(_data.message, 'OK');

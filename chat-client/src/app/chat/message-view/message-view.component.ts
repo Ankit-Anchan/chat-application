@@ -62,11 +62,11 @@ export class MessageViewComponent implements OnInit {
   }
 
   sendMessage() {
+    console.log('message = ' + this.message);
     if (!this.message || this.message === '') {
       this.showSnackBar('Type something to send a message', 'OK');
       return;
     }
-    console.log('message = ' + this.message);
     const msg = {
       message: this.message,
       sent_by: this.info._id,
@@ -75,7 +75,6 @@ export class MessageViewComponent implements OnInit {
       sent_to_username: this.activeChat.mobile_number
     };
     this.dataSharingService.sendMessage.next(msg);
-    // this.msgList.push(msg);
     this.message = '';
   }
 

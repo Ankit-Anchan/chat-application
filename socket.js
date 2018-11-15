@@ -26,6 +26,11 @@ socket.events = () => {
             console.log(data);
             socket.io.emit('group/crispy', data);
         });
+
+        socket.on('logout', () => {
+            console.log('user log out ' + socket.id);
+            socketRepository.deleteSocket(socket.id);
+        });
     
         socket.on('disconnect', function() {
             // remove socket from in-memory user connection list
