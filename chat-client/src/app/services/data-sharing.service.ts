@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 @Injectable()
 export class DataSharingService {
     public onConnect = new Subject<any>();
+    public onDisconnect = new Subject<any>();
     public newFriendRequest = new Subject<any>();
     public newRequestAccept = new Subject<any>();
     public newRequestDecline = new Subject<any>();

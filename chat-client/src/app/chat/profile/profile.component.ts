@@ -1,18 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CustomCookieService } from '../../services/custom-cookie.service';
 import { ContactService } from 'src/app/services/contact.service';
-import { MatSnackBar } from '@angular/material';
 import { UserLoginService } from 'src/app/services/user-login.service';
 import { Router } from '@angular/router';
 import { DataSharingService } from '../../services/data-sharing.service';
-import { SocketService } from 'src/app/services/socket.service';
+import { ISubscription } from 'rxjs-compat/Subscription';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
   firstname: string;
   lastname: string;
   mobileNumber: string;
@@ -21,6 +20,8 @@ export class ProfileComponent implements OnInit {
   isPendingRequestDataLoading: boolean;
   pendingList: any[];
   socket: SocketIOClient.Socket;
+  INewRequestSubscription: ISubscription;
+  IAcceptRequestSubscription: ISubscription;
 
   constructor (private cookieService: CustomCookieService,
                private loginService: UserLoginService,
@@ -39,11 +40,11 @@ export class ProfileComponent implements OnInit {
       this.mobileNumber = userInfo.mobile_number;
       this._id = userInfo._id;
       this.isProfileDataLoading = false;
-      this.dataSharingService.newFriendRequest.subscribe(data => {
+      this.INewRequestSubscription = this.dataSharingService.newFriendRequest.subscribe(data => {
         this.showSnackBar(data.message, 'OK');
         this.loadPendingRequest();
       });
-      this.dataSharingService.newRequestAccept.subscribe(data => {
+      this.IAcceptRequestSubscription = this.dataSharingService.newRequestAccept.subscribe(data => {
         this.showSnackBar(data.message, 'OK');
         this.loadPendingRequest();
       });
@@ -119,4 +120,9 @@ export class ProfileComponent implements OnInit {
       this.dataSharingService.showSnackBar.next({message: msg, action: action});
   }
 
+  ngOnDestroy() {
+    this.IAcceptRequestSubscription.unsubscribe();
+    this.INewRequestSubscription.unsubscribe();
+  }
+  
 }

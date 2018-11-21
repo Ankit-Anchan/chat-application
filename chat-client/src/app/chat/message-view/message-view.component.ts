@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DataSharingService } from 'src/app/services/data-sharing.service';
 import { CustomCookieService } from 'src/app/services/custom-cookie.service';
 import { MessagingService } from 'src/app/services/messaging.service';
+import {ISubscription} from 'rxjs-compat/Subscription';
 
 @Component({
   selector: 'app-message-view',
   templateUrl: './message-view.component.html',
   styleUrls: ['./message-view.component.css']
 })
-export class MessageViewComponent implements OnInit {
+export class MessageViewComponent implements OnInit, OnDestroy {
 
   activeChat: any;
   msgList: any[];
@@ -16,6 +17,8 @@ export class MessageViewComponent implements OnInit {
   isFetchingMessages: boolean;
   message: string;
   info: any;
+  IActiveChatSubscription: ISubscription;
+  INewMessageSubscription: ISubscription;
 
   constructor(private dataSharingService: DataSharingService,
               private cookieService: CustomCookieService,
@@ -31,7 +34,7 @@ export class MessageViewComponent implements OnInit {
       this.dataSharingService.activeChat.next(this.activeChat);
     }
     this.loggedInUser = this.info.mobile_number;
-    this.dataSharingService.activeChat.subscribe(data => {
+    this.IActiveChatSubscription = this.dataSharingService.activeChat.subscribe(data => {
       this.activeChat.mobile_number = data.mobile_number;
       this.activeChat.fullname = data.fullname;
       this.activeChat._id = data._id;
@@ -39,7 +42,7 @@ export class MessageViewComponent implements OnInit {
       this.loadMessageList(this.activeChat._id);
     });
     this.loadMessageList(this.activeChat._id);
-    this.dataSharingService.newMessage.subscribe(_data => {
+    this.INewMessageSubscription = this.dataSharingService.newMessage.subscribe(_data => {
       if (this.activeChat.mobile_number === _data.sent_by_username || this.activeChat.mobile_number === _data.sent_to_username) {
         this.msgList.push({message: _data.message, created_at: _data.created_at});
       }
@@ -80,5 +83,10 @@ export class MessageViewComponent implements OnInit {
 
   showSnackBar(msg: string, action: string) {
     this.dataSharingService.showSnackBar.next({message: msg, action: action});
+  }
+
+  ngOnDestroy() {
+    this.IActiveChatSubscription.unsubscribe();
+    this.INewMessageSubscription.unsubscribe();
   }
 }

@@ -44,6 +44,7 @@ export class SocketService {
 
             this.socket.on('disconnect', () => {
                 console.log('socket disconnected');
+                this.dataSharingService.onDisconnect.next({});
                 // this.socket.removeAllListeners();
             });
         });
