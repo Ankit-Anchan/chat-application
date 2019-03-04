@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
 
+process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
+
 const connection = require('./config/db.config');
 connection.connect();
 
@@ -57,3 +59,5 @@ console.log('Server started on port: ' + port);
 var io = require('socket.io').listen(server);
 
 require('./socket').init(io);
+
+module.exports = server;
