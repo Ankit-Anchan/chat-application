@@ -6,6 +6,7 @@ const MessageSchema = new Schema({
     sent_to_user: {type: Schema.Types.ObjectId, ref: 'USER'},
     sent_to_group: {type: Schema.Types.ObjectId, ref: 'GROUP'},
     message: {type: String, required: true},
+    is_read: {type: Number, default: 0 },
     is_deleted: {type: Number, default: 0},
     created_at: {type: Date, default: Date.now},
     modified_at: {type: Date, defualt: Date.now}

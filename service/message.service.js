@@ -19,4 +19,12 @@ MessageService.getMessages = (sent_by, sent_to) => {
     return messageRepository.getMessages(sent_by, sent_to);
 };
 
+MessageService.getUnreadMessages = (to, from) => {
+    return messageRepository.getUnreadMessages(to, from);
+};
+
+MessageService.markAsRead = (to, from) => {
+    return messageRepository.markAsRead(to, from);
+};
+
 module.exports = MessageService;

@@ -41,4 +41,27 @@ MessageRepository.getMessages = (sent_by, sent_to) => {
     return deferred.promise;
 };
 
+MessageRepository.getUnreadMessages = async (to, from) => {
+    console.log('sent by = ' + from);
+    console.log('sent to user = ' + to);
+    return await Message.find({
+        $and: [{is_read: 0}, {sent_by: from}, {sent_to_user: to}]
+    }).sort({created_at: 1}).lean().exec();
+};
+
+MessageRepository.markAsRead = async (to, from) => {
+    return await Message.updateMany(
+        {
+            $and: [
+                { sent_by: from },
+                { sent_to_user: to },
+                { created_at: { $lte: new Date().toISOString() }},
+                { is_read: 0}
+            ]
+        },
+        {
+        $set: { is_read: 1 }
+    })
+};
+
 module.exports = MessageRepository;

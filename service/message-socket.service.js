@@ -15,6 +15,7 @@ MessageSocketService.events = () => {
         console.log('upstream message event invoked');
         console.log(data);
         data.created_at = Date.now();
+        data.is_read = 0;
         let senderSocketList = userSocketRepository.getSocketByUsername(data.sent_by_username);
         let receiverSocketList = userSocketRepository.getSocketByUsername(data.sent_to_username);
         for(let i = 0; i < senderSocketList.length; i++) {
