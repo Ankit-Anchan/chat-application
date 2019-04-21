@@ -49,15 +49,22 @@ export class SocketService {
             });
         });
 
-        this.dataSharingService.sendMessage.subscribe(_data => {
-            console.log('socket id = ' + this.socket.id);
-            console.log('emitting a new message');
-            console.log(_data);
-            this.socket.emit('upstream_message', _data);
-        });
+        // this.dataSharingService.sendMessage.subscribe(_data => {
+        //     console.log('socket id = ' + this.socket.id);
+        //     console.log('emitting a new message');
+        //     console.log(_data);
+        //     this.socket.emit('upstream_message', _data);
+        // });
         this.dataSharingService.logOut.subscribe(_data => {
             this.socket.emit('log_out', _data);
         });
+    }
+
+    sendMessage(_message) {
+        console.log('socket id = ' + this.socket.id);
+        console.log('emitting a new message');
+        console.log(_message);
+        this.socket.emit('upstream_message', _message);
     }
 
     getSocket() {

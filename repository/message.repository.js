@@ -20,11 +20,16 @@ MessageRepository.addMessage = (data) => {
 MessageRepository.getMessages = (sent_by, sent_to) => {
     let deferred = q.defer();
     Message.find({
-        $or: [{sent_by: sent_by}, {sent_by: sent_to}]
+        $or: [
+        {
+            $and: [{sent_by: sent_by}, {sent_to_user: sent_to}],
+        },
+        {
+            $and: [{sent_by: sent_to}, {sent_to_user: sent_by}]
+        }] 
     }, [], {
         limit: 10
     })
-    .and({$or: [{sent_to_user: sent_by}, {sent_to_user: sent_to}]})
     .sort({created_at: 1})
     .lean()
     .exec((err, messageList) => {

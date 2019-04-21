@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {MessagingService} from '../../services/messaging.service';
 import { MatSnackBar } from '@angular/material';
 import { CustomCookieService } from '../../services/custom-cookie.service';
 import {SocketService} from '../../services/socket.service';
 import { DataSharingService } from 'src/app/services/data-sharing.service';
+import { ISubscription } from 'rxjs-compat/Subscription';
 
 @Component({
   selector: 'app-messages',
   templateUrl: './messages.component.html',
   styleUrls: ['./messages.component.css']
 })
-export class MessagesComponent implements OnInit {
+export class MessagesComponent implements OnInit, OnDestroy {
 
   userList: any;
   friendListFound: boolean;
@@ -18,6 +19,8 @@ export class MessagesComponent implements OnInit {
   searchValue: string;
   loggedInUser: string;
   activeChat: any;
+  activeChatSubscription: ISubscription;
+  newRequestAcceptSubscription: ISubscription;
 
   constructor(private messageService: MessagingService,
               private cookieService: CustomCookieService,
@@ -27,12 +30,12 @@ export class MessagesComponent implements OnInit {
     this.friendListFound = true;
     const data = JSON.parse(this.cookieService.getCookie('info'));
     this.loggedInUser = data.mobile_number;
-    this.dataSharingService.newRequestAccept.subscribe(_data => {
+    this.newRequestAcceptSubscription = this.dataSharingService.newRequestAccept.subscribe(_data => {
         this.displaySnackBar(_data.message, 'OK');
         this.loadFriendList();
       });
     this.activeChat = {mobile_number: '', fullname: ''};
-    this.dataSharingService.activeChat.subscribe(_data => {
+    this.activeChatSubscription = this.dataSharingService.activeChat.subscribe(_data => {
       this.activeChat.mobile_number = _data.mobile_number;
       this.activeChat.fullname = _data.fullname;
     });
@@ -143,5 +146,10 @@ export class MessagesComponent implements OnInit {
 
   displaySnackBar(msg: string, action: string) {
     this.dataSharingService.showSnackBar.next({message: msg, action: action});
+  }
+
+  ngOnDestroy() {
+    this.newRequestAcceptSubscription.unsubscribe();
+    this.activeChatSubscription.unsubscribe();
   }
 }

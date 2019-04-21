@@ -3,6 +3,7 @@ import { DataSharingService } from 'src/app/services/data-sharing.service';
 import { CustomCookieService } from 'src/app/services/custom-cookie.service';
 import { MessagingService } from 'src/app/services/messaging.service';
 import {ISubscription} from 'rxjs-compat/Subscription';
+import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
   selector: 'app-message-view',
@@ -21,6 +22,7 @@ export class MessageViewComponent implements OnInit, OnDestroy {
   INewMessageSubscription: ISubscription;
 
   constructor(private dataSharingService: DataSharingService,
+              private socketService: SocketService,
               private cookieService: CustomCookieService,
               private messageService: MessagingService) {
     this.activeChat = {mobile_number: '', fullname: '', _id: ''};
@@ -77,7 +79,8 @@ export class MessageViewComponent implements OnInit, OnDestroy {
       sent_to: this.activeChat._id,
       sent_to_username: this.activeChat.mobile_number
     };
-    this.dataSharingService.sendMessage.next(msg);
+    // this.dataSharingService.sendMessage.next(msg);
+    this.socketService.sendMessage(msg);
     this.message = '';
   }
 
