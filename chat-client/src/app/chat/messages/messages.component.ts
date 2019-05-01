@@ -49,7 +49,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
     this.INewMessageSubscription = this.dataSharingService.newMessage.subscribe(_data => {
       console.log('got a new message');
       this.userList.map(user => {
-        if (user.mobile_number === _data.sent_by_username) {
+        if (user.mobile_number === _data.sent_by_username && user.mobile_number !== this.activeChat.mobile_number) {
           console.log('increasing count of user ' + user.mobile_number);
           user.unread_count = user.unread_count + 1;
           return user;
