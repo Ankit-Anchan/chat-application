@@ -50,6 +50,20 @@ export class MessagingService {
     const header = new HttpHeaders()
       .set('content-type', 'application/json')
       .set('x-authorization', this.token);
-      return this.http.get(environment.server_url + 'api/v1/message/list/' + sent_to,{headers: header});
+      return this.http.get(environment.server_url + 'api/v1/message/list/' + sent_to, {headers: header});
+  }
+
+  getUnReadMessages(from: string) {
+    const header = new HttpHeaders()
+      .set('content-type', 'application/json')
+      .set('x-authorization', this.token);
+      return this.http.get(environment.server_url + 'api/v1/message/list/unread/' + from, {headers: header});
+  }
+
+  markAsRead(from: string) {
+    const header = new HttpHeaders()
+      .set('content-type', 'application/json')
+      .set('x-authorization', this.token);
+      return this.http.put(environment.server_url + 'api/v1/message/read/' + from, {}, {headers: header});
   }
 }

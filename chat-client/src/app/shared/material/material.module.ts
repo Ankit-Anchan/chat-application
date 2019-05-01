@@ -11,7 +11,7 @@ import {
   MatInputModule,
   MatFormFieldModule,
   MatCardModule, MatGridListModule,
-  MatProgressSpinnerModule, MatSnackBarModule, MatTabsModule, MatBottomSheetModule
+  MatProgressSpinnerModule, MatSnackBarModule, MatTabsModule, MatBottomSheetModule, MatBadgeModule
 } from '@angular/material';
 
 
@@ -26,6 +26,7 @@ import {
     MatIconModule,
     MatListModule,
     MatInputModule,
+    MatBadgeModule
   ],
   exports: [
     MyNavComponent,
@@ -43,7 +44,8 @@ import {
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatTabsModule,
-    MatBottomSheetModule
+    MatBottomSheetModule,
+    MatBadgeModule
   ],
   declarations: [MyNavComponent]
 })

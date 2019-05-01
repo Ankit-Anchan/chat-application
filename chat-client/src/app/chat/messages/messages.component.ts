@@ -5,6 +5,7 @@ import { CustomCookieService } from '../../services/custom-cookie.service';
 import {SocketService} from '../../services/socket.service';
 import { DataSharingService } from 'src/app/services/data-sharing.service';
 import { ISubscription } from 'rxjs-compat/Subscription';
+import { p } from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-messages',
@@ -21,6 +22,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
   activeChat: any;
   activeChatSubscription: ISubscription;
   newRequestAcceptSubscription: ISubscription;
+  INewMessageSubscription: ISubscription;
 
   constructor(private messageService: MessagingService,
               private cookieService: CustomCookieService,
@@ -36,8 +38,24 @@ export class MessagesComponent implements OnInit, OnDestroy {
       });
     this.activeChat = {mobile_number: '', fullname: ''};
     this.activeChatSubscription = this.dataSharingService.activeChat.subscribe(_data => {
+      console.log('active chat = ');
+      console.log(_data);
       this.activeChat.mobile_number = _data.mobile_number;
       this.activeChat.fullname = _data.fullname;
+      this.messageService.markAsRead(_data._id).subscribe(res => {
+        console.log('messages marked as read');
+      });
+    });
+    this.INewMessageSubscription = this.dataSharingService.newMessage.subscribe(_data => {
+      console.log('got a new message');
+      this.userList.map(user => {
+        if (user.mobile_number === _data.sent_by_username) {
+          console.log('increasing count of user ' + user.mobile_number);
+          user.unread_count = user.unread_count + 1;
+          return user;
+        }
+        return user;
+      });
     });
   }
 
@@ -85,6 +103,9 @@ export class MessagesComponent implements OnInit, OnDestroy {
       _err => {
         this.friendListFound = false;
         this.isSearchResultLoading = false;
+      },
+      () => {
+        this.fetchUnReadMessageCount();
       });
   }
 
@@ -129,6 +150,22 @@ export class MessagesComponent implements OnInit, OnDestroy {
     return parsedList;
   }
 
+  fetchUnReadMessageCount() {
+    this.userList.map(user => {
+      console.log('user = ');
+      console.log(user);
+      this.messageService.getUnReadMessages(user.id)
+        .subscribe((res: any[]) => {
+          console.log('getting unread message for = ' + user.mobile_number);
+          console.log(res);
+          user.unread_count = res.length;
+        },
+        err => {
+          user.unread_count = 0;
+        });
+    });
+  }
+
   sendFriendRequest(_id: string) {
     this.messageService.sendFriendRequest(_id).subscribe(res => {
         console.log(res);
@@ -140,8 +177,13 @@ export class MessagesComponent implements OnInit, OnDestroy {
     });
   }
 
-  setActiveChat(mobileNumber: string, fullName: string, id: string) {
-    this.dataSharingService.activeChat.next({mobile_number: mobileNumber, fullname: fullName, _id: id});
+  setActiveChat(user: any) {
+    user.unread_count = 0;
+    console.log('setting active chat = ');
+    console.log(user);
+    this.dataSharingService.activeChat.next({mobile_number: user.mobile_number,
+                                            fullname: user.firstname + ' ' + user.lastname,
+                                            _id: user.id});
   }
 
   displaySnackBar(msg: string, action: string) {
@@ -151,5 +193,6 @@ export class MessagesComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.newRequestAcceptSubscription.unsubscribe();
     this.activeChatSubscription.unsubscribe();
+    this.INewMessageSubscription.unsubscribe();
   }
 }

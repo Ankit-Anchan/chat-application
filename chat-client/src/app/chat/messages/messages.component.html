@@ -13,10 +13,10 @@
           <div *ngIf="friendListFound">
           <div style="color:#f3f3f3"  *ngIf="friendListFound">Friend list:</div>
           <mat-card [class.card-not-pressed]="user.mobile_number !== activeChat.mobile_number" [class.card-press]="user.mobile_number === activeChat.mobile_number" *ngFor="let user of userList" style="padding:0px;">
-            <div (click)="setActiveChat(user.mobile_number, user.firstname + ' ' + user.lastname, user.id) " style="cursor: pointer; padding: 10px;">
+            <div (click)="setActiveChat(user) " style="cursor: pointer; padding: 10px;">
             <mat-card-header style="margin-bottom:0px;" >
               <div mat-card-avatar class="example-header-image"></div>
-              <mat-card-title style="margin-bottom:8px;">{{ user.mobile_number }}</mat-card-title>
+              <mat-card-title style="margin-bottom:8px;">{{ user.mobile_number }}</mat-card-title><span *ngIf="user.unread_count && user.unread_count > 0" matBadge="{{user.unread_count}}"></span>
               <mat-card-subtitle style="margin-bottom:0px;" >{{ user.firstname }} {{ user.lastname }}</mat-card-subtitle>
             </mat-card-header>
             </div>

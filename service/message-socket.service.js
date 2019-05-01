@@ -18,6 +18,8 @@ MessageSocketService.events = () => {
         data.is_read = 0;
         let senderSocketList = userSocketRepository.getSocketByUsername(data.sent_by_username);
         let receiverSocketList = userSocketRepository.getSocketByUsername(data.sent_to_username);
+        console.log('sender socket list length = ' + senderSocketList.length);
+        console.log('receiver socket list length = ' + receiverSocketList.length);
         for(let i = 0; i < senderSocketList.length; i++) {
             console.log(i + 'emitting downstream message to sender ' + senderSocketList[i].socket_id);
             senderSocketList[i].socket.emit('downstream_message', data);
