@@ -19,25 +19,38 @@
     <div>
       <div *ngIf="msgList">
         <div *ngFor="let msg of msgList">
-          <div *ngIf="msg.sent_by_username==loggedInUser" style="text-align: right">
-            <mat-card>
+          <div *ngIf="msg.sent_by_username===loggedInUser" style="text-align: right">
+            <!-- <mat-card>
               <mat-card-content>
                 <div class="row">
                   <p class="col-md-8"> {{msg.message}} </p>
                   <p class="col-md-4"> {{ msg.created_at | date: 'dd/MM/yyyy hh:mm a' }} </p>
                 </div>
               </mat-card-content>
-            </mat-card>
+            </mat-card> -->
+            <mat-chip-list class="mat-chip-list-stacked">  
+                <mat-chip *ngFor="let msg of msgList">
+                  <p>{{msg.message}}</p>
+                  <!-- <p> {{ msg.created_at | date: 'dd/MM/yyyy hh:mm a' }} </p> -->
+                </mat-chip>
+              </mat-chip-list>
           </div>
-          <div *ngIf="msg.sent_by_username!=loggedInUser" style="text-align: left">
-            <mat-card>
+          
+          <div *ngIf="msg.sent_by_username!==loggedInUser" style="text-align: left">
+            <!-- <mat-card>
               <mat-card-content>
                 <div class="row">
                   <p class="col-md-8"> {{msg.message}} </p>
                   <p class="col-md-4"> {{ msg.created_at | date: 'dd/MM/yyyy HH:MM' }} </p>
                 </div>
               </mat-card-content>
-            </mat-card>
+            </mat-card> -->
+            <mat-chip-list class="mat-chip-list-stacked">  
+                <mat-chip *ngFor="let msg of msgList">
+                  <p>{{msg.message}}</p>
+                  <!-- <p> {{ msg.created_at | date: 'dd/MM/yyyy hh:mm a' }} </p> -->
+                </mat-chip>
+              </mat-chip-list>
           </div>
         </div>
       </div>
